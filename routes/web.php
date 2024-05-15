@@ -28,6 +28,7 @@ use App\Http\Controllers\Backend\WalletSpentMoneyController;
 use App\Http\Controllers\Backend\WalletTransactionController;
 use App\Http\Controllers\Backend\WalletTransactionTypeController;
 use App\Http\Controllers\Backend\Admin\AdminController;
+use App\Http\Controllers\UserDetailController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -77,8 +78,15 @@ Route::resources([
 Route::post('all_step_filter_create',[FilterStudentSearchTeacherController::class,'stepCreate'])->name('all_step_filter.stepCreate');
 Route::post('all_step_filter_update',[FilterStudentSearchTeacherController::class,'stepUpdate'])->name('all_step_filter.stepUpdate');
 Route::resource('all_step_filter',FilterStudentSearchTeacherController::class,['names' => ['index'=>'all_step_filter']]);
+
+//User Detail Route Start
+Route::get('users_profile',[UserDetailController::class,'UserEditProfile'])->name('users_profile.index');
+Route::post('users_detail_update',[UserDetailController::class,'UserDetailUpdate'])->name('users_detail.update');
+//User Detail Route End
+
+
 //Teacher Route Section Start
-Route::get('teachers_profile',[TeacherDetailsController::class,'index'])->name('teachers_profile.index');
+
 Route::get('teachers_profile_lessons',[TeacherDetailsController::class,'lessons'])->name('teachers_profile.lessons');
 
 Route::get('teachers_profile_info',[TeacherDetailsController::class,'info'])->name('teachers_profile.info');
@@ -132,5 +140,9 @@ Route::get('admin_dashboard',[AdminController::class,'index'])->name('admin_dash
 Route::get('admin_filter_items',[AdminController::class,'filterItems'])->name('admin.filterItems');
 
 //Admin Route Section End
+
+//City County js Home
+Route::post('api/fetch-county',[UserDetailController::class,'fetchCounty'])->name('fetch.county');
+//City County js End
 
 

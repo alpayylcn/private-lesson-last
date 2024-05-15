@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend\Teacher;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\Backend\LessonService;
 use App\Services\Backend\ClassService;
@@ -10,6 +11,7 @@ use App\Services\Backend\TeacherDetailService;
 use App\Services\Backend\TeacherGeneralService;
 use App\Services\Backend\TeacherToLessonAndClassService;
 use App\Services\Backend\TeacherToLocationService;
+use Illuminate\Support\Facades\Auth;
 
 class TeacherDetailsController extends Controller
 {
@@ -22,8 +24,10 @@ class TeacherDetailsController extends Controller
         protected TeacherToLocationService $teacherToLocationService
         ){}
     public function index(){ 
+        $id = Auth::user()->id;
+        $userData = User::find($id);
         $data=$this->teacherGeneralService->general();
-        return view('teachers.teacher_profile',compact('data'));
+        return view('teachers.teacher_profile',compact('data','userData'));
     }
     public function lessons(){
         $data=$this->teacherGeneralService->general();

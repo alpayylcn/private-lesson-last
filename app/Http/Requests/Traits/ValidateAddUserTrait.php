@@ -18,9 +18,9 @@ trait ValidateAddUserTrait{
     public function customMessages()
     {
         return  [
-            'add_user_id.required' => 'User alanı zorunludur.',
-            'add_user_id.int' => 'User alanı sayı formatında olmalıdır.',
-            'add_user_id.exists' => 'Bu User geçersiz veya mevcut değil.',
+            'add_user_id.required' => 'Kullanıcı bilgisi alınamadı.',
+            'add_user_id.int' => 'Kullanıcı kimliği sayı formatında olmalıdır.',
+            'add_user_id.exists' => 'Bu kullanıcı geçersiz veya mevcut değil.',
             
         ];
     }

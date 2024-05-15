@@ -22,8 +22,8 @@
 {{-- Top Buttons End --}}
 
 <div class="row">
-  <form method="POST" action="" enctype="multipart/form-data">
-    @csrf 
+  {{-- <form method="POST" action="" enctype="multipart/form-data">
+    @csrf  --}}
     <input type="hidden" name="user_id" value="1">
   <div class="col-md-12">
     {{-- Top Buttons Start --}}
@@ -39,17 +39,62 @@
             
             <table>
               <th>Sorular</th>
-              <th>Sıra Numarası</th>
+              <th>İşlemler</th>
               @foreach ($data as $question)
               <tr> 
                 <td class="col-10"><input type="text" name="title[{{$question->id}}]" class="form-control" value="{{$question->title}}" placeholder=""></td>
-                <td><input type="text" name="title[{{$question->id}}]" class="form-control" value="{{$question->rank}}" placeholder=""></td>
+                <td class="col-2"><button type="button" data-bs-toggle="modal" data-bs-target="#modalCenter{{$question->id}}" class="form-control btn-warning"><i class="bx bx-message-square-edit  me-2"></i>Edit</button></td>
+                
               </tr>
-              @endforeach
-              
-            </table>
-            
-           
+
+            <div class="col-lg-8 col-md-8">
+               <div class="mt-3">
+                 <!-- Modal -->
+                <div class="modal fade" id="modalCenter{{$question->id}}" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="modalCenterTitle">Filtre Adım Düzenle {{$question->id}}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col-md-2 mb-3">
+                            <label for="nameWithTitle" class="form-label"><b>Soru Sırası</b></label>
+                            <input type="text" id="nameWithTitle"class="form-control" value="{{$question->id}}"/>
+                          </div>
+                          <div class="col mb-10">
+                            <label for="nameWithTitle" class="form-label"><b>Soru Başlığı</b></label>
+                            <input type="text" id="nameWithTitle"class="form-control" value="{{$question->title}}"/>
+                          </div>
+                          
+                        </div>
+                        <div class="row g-2">
+                          <div class="col mb-0">
+                            <label for="emailWithTitle" class="form-label"><b>Alt Başlıklar</b></label>
+                            
+                            
+                            <input type="text" id="options" class="form-control" />
+                          
+                          
+                          </div>
+                          
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                          Kapat
+                        </button>
+                        <button type="button" class="btn btn-primary">Kaydet</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+              <!-- Modal end -->
+            @endforeach
+          </table>
           </div>
           
         </div>

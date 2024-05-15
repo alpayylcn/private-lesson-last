@@ -89,7 +89,7 @@
         </a>
         <ul class="menu-sub">
           <li class="menu-item">
-            <a href="{{route('teachers_profile.index')}}" class="menu-link">
+            <a href="{{route('users_profile.index')}}" class="menu-link">
               <div data-i18n="Account">Üyelik Bilgileri</div>
             </a>
           </li>

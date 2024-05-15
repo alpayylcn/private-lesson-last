@@ -2,7 +2,9 @@
 namespace App\Services\Backend;
 use App\Models\Backend\TeacherDetail;
 use App\Models\Backend\TeacherProfile;
+use App\Models\UserDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TeacherGeneralService{
 
@@ -18,6 +20,7 @@ class TeacherGeneralService{
         protected TeacherProfileService $teacherProfileService,
         protected TeacherSkilService $teacherSkilService,
         protected LessonToClassService $lessonToClassService,
+        protected UserDetailService $userDetailService,
         
 
         
@@ -25,12 +28,14 @@ class TeacherGeneralService{
        
     public function general(){
         
-        $id=1;//AUTH USER ID auth()->user()->id;
-        //if 
+        $id=Auth::user()->id;
+         
+        if (!empty ($id)){
         $lessons=$this->lessonService->getWithWhere();  
         $classes=$this->classService->getWithWhere(); 
         $lessonToClasses=$this->lessonToClassService->getWithWhereGroupLesson(); 
         $teacherData=$this->teacherDetailService->first(['user_id'=>$id]); //user modeline eklenecek hasmany ve hasone kullanılacak
+        $userDetailData=$this->userDetailService->first(['user_id'=>$id]);
         $locations=$this->filterLessonLocationService->getWithWhere();
         $teacherToLesson=$this->teacherToLessonAndClassService->getWithWhereLesson(['user_id'=>$id]); //user modeline eklenecek hasmany ve hasone kullanılacak
         $teacherToClass=$this->teacherToLessonAndClassService->getWithWhereClass(['user_id'=>$id]); //user modeline eklenecek hasmany ve hasone kullanılacak
@@ -40,7 +45,9 @@ class TeacherGeneralService{
         //return [$lessons,$classes]; aslı bu şekilde olacak 
         return compact('lessons','classes','lessonToClasses','teacherData',
         'locations','teacherToLesson','teacherProfileData','teacherToClass',
-        'teacherToLocation','teacherToLessonPrice');
+        'teacherToLocation','teacherToLessonPrice','userDetailData');  
+        }
+       
         
     }
     public function updateTeacherDetails(array $teacherProfileData,int $id=1){

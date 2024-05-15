@@ -4,10 +4,13 @@
 @endsection
 
 @section('css')
-   css kodlar
+  
 @endsection
 
+
 @section('js')
+
+
 <script type="text/javascript">
    $(document).ready(function() {
        $('#photo').change(function(e) {
@@ -19,6 +22,8 @@
        });
    });
 </script>
+
+
 @endsection
 
 
@@ -32,8 +37,8 @@
               <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Ayarlar /</span> Profil Sayfası</h4>
 
               <div class="row">
-                <form method="POST" action="{{route('teachers_profile.update')}}" enctype="multipart/form-data">
-                  @csrf 
+                {{-- <form method="POST" action="{{route('teachers_profile.update')}}" enctype="multipart/form-data">
+                  @csrf  --}}
                   <input type="hidden" name="user_id" value="1">
                 <div class="col-md-12">
                   <ul class="nav nav-pills flex-column flex-md-row mb-3">
@@ -61,52 +66,93 @@
                       >
                     </li>
                   </ul>
-                  <div class="card mb-4">
+                  <div class="card mb-4"> 
+                    <form method="POST" action="{{route('users_detail.update')}}" enctype="multipart/form-data">
+                      @csrf
                     <h5 class="card-header">Kişisel Bilgiler</h5>
                     <!-- Account -->
+
+                    
                     <div class="card-body">
+
                       <div class="d-flex align-items-start align-items-sm-center gap-4">
-                        <img id="ProfilePhoto" src="{{asset('backend/assets')}}/img/avatars/teachers_avatar_male.jpg" class="d-block rounded"height="100"width="100"id="uploadedAvatar" />
+                        @if (($data['userDetailData']->profile_image))
+                          <img id="ProfilePhoto" src="{{asset('backend/assets')}}/img/profileimages/{{$data['userDetailData']->profile_image}}" class="d-block rounded"height="100"width="100"id="uploadedAvatar" />
+                        @else
+                          <img id="ProfilePhoto" class="d-block rounded"height="100"width="100"   src="{{asset('backend/assets')}}/img/profileimages/no_image.jpg" alt="">
+                        @endif
+                        
+                        
+                        
                         <div class="button-wrapper">
                           <label for="photo" class="btn btn-primary me-2 mb-4" tabindex="0">
                             <span class="d-none d-sm-block">Fotoğrafı Değiştir</span>
                             <i class="bx bx-upload d-block d-sm-none"></i>
-                            <input type="file" id="photo" class="account-file-input" hidden accept="image/png, image/jpeg" name="photo" value="image"/>
+                            <input type="file" id="photo" class="account-file-input" hidden accept="image/png, image/jpeg" name="profile_image" value="image"/>
                           </label>
+                          
                           <p class="text-muted mb-0">JPG, PNG</p>
+                          
                         </div>
                       </div>
                     </div>
+
                     <hr class="my-0" />
                     <div class="card-body">
-                      {{-- <form id="formAccountSettings" method="POST" action="{{route('teachers_profile.update')}}" onsubmit="return false">
-                        @csrf --}}
+                      
                         <div class="row">
                           <div class="mb-3 col-md-6">
-                            <input  type="hidden" name="user_id" id="user_id" value="1" readonly />
+                            <input  type="hidden" name="user_id" id="user_id" value="{{$userData->id}}" readonly />
                             <label for="firstName" class="form-label">Adınız</label>
-                            <input class="form-control" type="text"id="firstName"name="firstName"value="{{$data['teacherData']->name}}" autofocus />
+                            <input class="form-control" type="text"id="name"name="name"value="{{$userData->name}}" autofocus />
+                                @if($errors->has('name'))
+                                  @foreach ($errors->get('name') as $error)
+                                    <div class="alert alert-danger col-lg-12 mt-2">{{ $error }}</div>
+                                  @endforeach
+                                @endif 
+                                @if($errors->has('add_user_id'))
+                                @foreach ($errors->get('add_user_id') as $errorUser)
+                                  <div class="alert alert-danger col-lg-12 mt-2">{{ $errorUser }}</div>
+                                @endforeach
+                              @endif
                           </div>
+                          
                           <div class="mb-3 col-md-6">
                             <label for="lastName" class="form-label">Soyadınız</label>
-                            <input class="form-control" type="text" name="lastName" id="lastName" value="{{$data['teacherData']->surname}}" />
+                            <input class="form-control" type="text" name="surname" id="surname" value="{{$userData->surname}}" />
+                                @if($errors->has('surname'))
+                                  @foreach ($errors->get('surname') as $error)
+                                    <div class="alert alert-danger col-lg-12 mt-2">{{ $error }}</div>
+                                  @endforeach
+                                @endif 
+                          
                           </div>
                           <div class="mb-3 col-md-6">
                             <label for="email" class="form-label">E-mail Adresiniz</label>
-                            <input class="form-control"type="text"id="email" name="email"value="{{$data['teacherData']->mail}}"/>
+                            <input class="form-control"type="text"id="email" name="email"value="{{$userData->email}}"/>
+                              @if($errors->has('email'))
+                                @foreach ($errors->get('email') as $error)
+                                  <div class="alert alert-danger col-lg-12 mt-2">{{ $error }}</div>
+                                @endforeach
+                              @endif 
                           </div>
                           <div class="mb-3 col-md-6">
                             <label class="form-label" for="phoneNumber">Telefon Numaranız</label>
                             <div class="input-group input-group-merge">
-                            <input type="text" id="phone" name="phone" class="form-control" placeholder="+90" value="{{$data['teacherData']->phone}}" required maxlength="11" />
+                            <input type="text" id="phone" name="phone" class="form-control" placeholder="+90" value="{{$data['userDetailData']?->phone }}" required maxlength="11" />
                             </div>
+                              @if($errors->has('phone'))
+                                @foreach ($errors->get('phone') as $error)
+                                  <div class="alert alert-danger col-lg-12 mt-2">{{ $error }}</div>
+                                @endforeach
+                              @endif 
                           </div>
                           
                           @include('teachers.citycounty')
                           
                           <div class="mb-3 col-md-4">
                             <label for="district" class="form-label">Mahalle</label>
-                            <input type="text"class="form-control"id="district"name="district"placeholder="{{$data['teacherData']->district}}"/>
+                            <input type="text"class="form-control"id="district"name="district" value="{{$data['userDetailData']?->district}}"/>
                           </div>
                           
                           <div class="card-body">
@@ -115,11 +161,17 @@
                               <div class="col-md">
                                 <small class="form-label fw-semibold d-block">Cinsiyet seçiniz</small>
                                 <div class="form-check form-check-inline mt-3">
-                                  <input class="form-check-input" type="radio" name="gender" id="inlineRadio1" value="kadın" required />
+                                  <input class="form-check-input" type="radio" name="gender" id="inlineRadio1" value="kadın" 
+                                  @if ($data['userDetailData']?->gender=='kadın')
+                                  checked
+                                  @endif  required />
                                   <label class="form-check-label" for="inlineRadio1">KADIN</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                  <input class="form-check-input"type="radio" name="gender" id="inlineRadio2" value="erkek"/>
+                                  <input class="form-check-input"type="radio" name="gender" id="inlineRadio2" value="erkek"
+                                  @if ($data['userDetailData']?->gender=='erkek')
+                                    checked
+                                  @endif  required />
                                   <label class="form-check-label" for="inlineRadio2">ERKEK</label>
                                 </div>
                                 
