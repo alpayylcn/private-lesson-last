@@ -18,6 +18,13 @@ class FilterLessonTimePeriodController extends Controller
 
         }
     }
+    public function filterLessonTimePeriodEdit()
+    {
+        $data=$this->filterLessonTimePeriodService->getWithWhere();
+        //dd($data->title);
+        return view('admin.filter_lesson_time_period_edit',compact('data'));
+        
+    }
 
     /**
      * Show the form for creating a new resource.

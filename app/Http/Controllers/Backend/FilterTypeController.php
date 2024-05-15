@@ -19,6 +19,13 @@ class FilterTypeController extends Controller
         }
 
     }
+    public function filterLessonTypeEdit()
+    {
+        $data=$this->filterTypeService->getWithWhere();
+        //dd($data->title);
+        return view('admin.filter_lesson_type_edit',compact('data'));
+        
+    }
 
     /**
      * Show the form for creating a new resource.

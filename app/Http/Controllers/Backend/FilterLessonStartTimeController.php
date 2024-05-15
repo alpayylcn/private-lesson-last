@@ -16,6 +16,13 @@ class FilterLessonStartTimeController extends Controller
         //
     }
 
+    public function filterLessonStartTimeEdit()
+    {
+        $data=$this->filterLessonStartTimeService->getWithWhere();
+        //dd($data->title);
+        return view('admin.filter_lesson_start_time_edit',compact('data'));
+        
+    }
     /**
      * Show the form for creating a new resource.
      */

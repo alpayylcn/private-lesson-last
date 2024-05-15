@@ -19,6 +19,14 @@ class FilterWhoController extends Controller
         }
     }
 
+    public function filterLessonWhoEdit()
+    {
+        $data=$this->filterWhoService->getWithWhere();
+        //dd($data->title);
+        return view('admin.filter_lesson_who_edit',compact('data'));
+        
+    }
+
     /**
      * Show the form for creating a new resource.
      */

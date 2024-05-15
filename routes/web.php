@@ -75,6 +75,8 @@ Route::resources([
     
     
 ]);
+Route::middleware('auth')->group(function () {
+
 Route::post('all_step_filter_create',[FilterStudentSearchTeacherController::class,'stepCreate'])->name('all_step_filter.stepCreate');
 Route::post('all_step_filter_update',[FilterStudentSearchTeacherController::class,'stepUpdate'])->name('all_step_filter.stepUpdate');
 Route::resource('all_step_filter',FilterStudentSearchTeacherController::class,['names' => ['index'=>'all_step_filter']]);
@@ -137,12 +139,29 @@ Route::post('admin_lesson_to_class',[AddRelationshipLessonAndClassController::cl
 
 //Admin Route Section Start
 Route::get('admin_dashboard',[AdminController::class,'index'])->name('admin_dashboard.index');
-Route::get('admin_filter_items',[AdminController::class,'filterItems'])->name('admin.filterItems');
-
 //Admin Route Section End
+
+//Admin Filter Section Start
+Route::get('admin_filter_items',[AdminController::class,'filterItems'])->name('admin.filterItems');
+Route::post('admin_filter_items_add',[AdminController::class,'filterItemsAdd'])->name('admin.filterItemsAdd');
+Route::post('admin_filter_items_update',[AdminController::class,'filterItemsUpdate'])->name('admin.filterItemsUpdate');
+Route::post('admin_filter_items_delete',[AdminController::class,'filterItemsDelete'])->name('admin.filterItemsDelete');
+Route::get('admin_filter_lesson_location_edit',[FilterLessonLocationController::class,'filterLessonLocationEdit'])->name('admin.filterLessonLocationEdit');
+Route::post('admin_filter_lesson_location_update',[FilterLessonLocationController::class,'filterLessonLocationUpdate'])->name('admin.filterLessonLocationUpdate');
+Route::post('admin_filter_lesson_location_add',[FilterLessonLocationController::class,'filterLessonLocationAdd'])->name('admin.filterLessonLocationAdd');
+Route::get('admin_filter_lesson_who_edit',[FilterWhoController::class,'filterLessonWhoEdit'])->name('admin.filterLessonWhoEdit');
+Route::get('admin_filter_lesson_week_time_edit',[FilterWeekTimeController::class,'filterLessonWeekTimeEdit'])->name('admin.filterLessonWeekTimeEdit');
+Route::get('admin_filter_lesson_time_period_edit',[FilterLessonTimePeriodController::class,'filterLessonTimePeriodEdit'])->name('admin.filterLessonTimePeriodEdit');
+Route::get('admin_filter_lesson_start_time_edit',[FilterLessonStartTimeController::class,'filterLessonStartTimeEdit'])->name('admin.filterLessonStartTimeEdit');
+Route::get('admin_filter_lesson_type_edit',[FilterTypeController::class,'filterLessonTypeEdit'])->name('admin.filterLessonTypeEdit');
+//Admin Filter Section End
+
+
 
 //City County js Home
 Route::post('api/fetch-county',[UserDetailController::class,'fetchCounty'])->name('fetch.county');
 //City County js End
 
 
+
+});

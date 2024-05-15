@@ -18,6 +18,13 @@ class FilterWeekTimeController extends Controller
 
         }
     }
+    public function filterLessonWeekTimeEdit()
+    {
+        $data=$this->filterWeekTimeService->getWithWhere();
+        //dd($data->title);
+        return view('admin.filter_lesson_week_time_edit',compact('data'));
+        
+    }
 
     /**
      * Show the form for creating a new resource.

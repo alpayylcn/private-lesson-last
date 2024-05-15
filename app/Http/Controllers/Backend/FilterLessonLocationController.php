@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Backend\LessonLocation\LessonLocationAddRequest;
+use App\Http\Requests\Backend\LessonLocation\LessonLocationUpdateRequest;
+use App\Models\Backend\FilterLessonLocation;
 use App\Services\Backend\FilterLessonLocationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FilterLessonLocationController extends Controller
 {
@@ -20,9 +24,62 @@ class FilterLessonLocationController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function filterLessonLocationEdit()
+    {   $userId=Auth::user()->id;
+        $data=$this->filterLessonLocationService->getWithWhere();
+        //dd($data->title);
+        return view('admin.filter_lesson_location_edit',compact('data','userId'));
+        
+    }
+
+    public function filterLessonLocationAdd(LessonLocationAddRequest $request)
+    {   
+      // dd('soru ekleme',$request);
+        $userId=Auth::user()->id;
+       
+        $locationAdd=$this->filterLessonLocationService->create($request->except('_token'));
+        if(!empty($locationAdd)){
+           $data=$this->filterLessonLocationService->getWithWhere();
+        //dd($data->title);
+        toastr()->success('Ekleme İşlemi Başarılı', 'Başarılı', ["positionClass" => "toast-top-right"]);
+        return back();  
+        }
+       
+        
+    }
+
+    public function filterLessonLocationUpdate(LessonLocationUpdateRequest $request)
+    {   //dd($request);
+        $userId=Auth::user()->id;
+        foreach ($request->title as $id => $title) 
+        {
+            // ID'ye göre modeli bul
+            
+            $model = FilterLessonLocation::find($id);
+            //dd($model);
+            // Eğer model bulunursa ve title değeri farklıysa güncelle
+            if ($model && $model->title != $title) {
+                $model->title = $title;
+                $model->save(); // Güncelleme işlemi
+            }  
+        }
+        foreach ($request->teacher_title as $id => $teacher_title) 
+        {
+            // ID'ye göre modeli bul
+            
+            $model = FilterLessonLocation::find($id);
+            //dd($model);
+            // Eğer model bulunursa ve title değeri farklıysa güncelle
+            if ($model && $model->teacher_title != $teacher_title) {
+                $model->teacher_title = $teacher_title;
+                $model->save(); // Güncelleme işlemi
+            }  
+        }
+       
+        toastr()->success('Güncelleme İşlemi Başarılı', 'Başarılı', ["positionClass" => "toast-top-right"]);
+        return back();
+        
+    }
     public function create()
     {
         //
