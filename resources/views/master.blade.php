@@ -28,5 +28,6 @@
 
     @include('layout.js')
     @yield('js')
+    
   </body>
 </html>

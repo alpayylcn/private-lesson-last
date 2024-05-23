@@ -33,4 +33,10 @@ class UserDetail extends Model
     public function cityName():HasOne{
         return $this->hasOne(City::class,'id','city');
     } 
+
+    // Telefon numarasını temizleyen mutator Otomatik formatta bulunan parantez ve tireleri atar
+    public function setPhoneAttribute($value)
+    {
+        $this->attributes['phone'] = preg_replace('/\D/', '', $value);
+    }
 }

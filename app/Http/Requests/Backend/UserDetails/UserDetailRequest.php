@@ -21,6 +21,7 @@ class UserDetailRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
+            'profile_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // 2MB = 2048KB
             'name' =>[
                 'required',
                 'string',
@@ -37,7 +38,8 @@ class UserDetailRequest extends FormRequest
                 'required',
             ],
             'phone' =>[
-                'required',
+                'required', 
+                'regex:/^0\(\d{3}\) \d{3} \d{2} \d{2}$/', // Türkiye formatı 
             ],
             'city' =>[
                 'required',
@@ -55,16 +57,21 @@ class UserDetailRequest extends FormRequest
         [
             'name.required' => 'Lütfen Adınızı Yazınız...',
             'name.string' => 'Adınız haflerden oluşmalıdır...',
-            'name.max' => 'En fazla 20 karakter yazabilirsiniz...',
-            'name.min' => 'En az 2 karakter yazmalısınız...',
+            'name.max' => 'Adınız alanına en fazla 20 karakter yazabilirsiniz...',
+            'name.min' => 'Adınız alanına en az 2 karakter yazmalısınız...',
             'surname.required' => 'Lütfen Soyadınızı Yazınız...',
             'surname.string' => 'Soyadınız haflerden oluşmalıdır...',
-            'surname.max' => 'En fazla 20 karakter yazabilirsiniz...',
-            'surname.min' => 'En az 2 karakter yazmalısınız...',
-            'email.required' => 'Bu alan boş bırakılamaz...',
-            'phone.required' => 'Bu alan boş bırakılamaz...',
-            'city.required' => 'Bu alan boş bırakılamaz...',
-            'county.required' => 'Bu alan boş bırakılamaz...',
+            'surname.max' => 'Soyad alanına en fazla 20 karakter yazabilirsiniz...',
+            'surname.min' => 'Soyad alanına en az 2 karakter yazmalısınız...',
+            'email.required' => 'E Mail alanı boş bırakılamaz...',
+            'phone.required' => 'Telefon alanı boş bırakılamaz...',
+            'phone.regex' => 'Lütfen telefon numaranızı formata uygun olarak yazınız... ',
+            'city.required' => 'Şehir alanı boş bırakılamaz...',
+            'county.required' => 'İlçe alanı boş bırakılamaz...',
+            'profile_image.image'=>'Sadece resim yükleyebilirsiniz...',
+            'profile_image.max'=>'Resim Max.2MB olmalıdır...',
+            'profile_image.mimes'=>'Sadece şu formatta resim yükleyebilirsiniz : jpeg, png, jpg, gif, svg...'
+            
         ]);
     }
 }

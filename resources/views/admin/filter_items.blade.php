@@ -29,7 +29,12 @@
     {{-- Top Buttons Start --}}
     @include('admin.layout.tabs_filter_items')
     {{-- Top Buttons End --}}
-    
+    @if($errors->any())
+      @foreach ($errors->all() as $error)
+        <div class="alert alert-danger col-lg-12 mt-2">{{ $error }}</div>
+      @endforeach
+    @endif 
+  
     <div class="row">
       <div class="col-md-6">
         <div class="card mb-4">
@@ -40,31 +45,23 @@
             <table>
               <th>Sorular</th>
               <th>Sıra Numarası</th>
-              @foreach ($data as $question)
-              
-              <tr> 
+              @forelse ($data as $question )
+                <tr id="{{$question->id}}"> 
                 <td class="col-10"><input type="text" disabled name="title[{{$question->id}}]" class="form-control" value="{{$question->title}}" placeholder=""></td>
                 <td><input type="text" name="title[{{$question->id}}]" class="form-control" value="{{$question->rank}}" placeholder=""></td>
               <form method="POST" action="{{route('admin.filterItemsDelete')}}">
-                <td><button type="submit" class="form-control btn-danger"><i class="bx bx-trash  me-2"></button></td>
+                <td><button id="{{$question->id}}" type="submit" class="form-control btn-danger"><i class="bx bx-trash  me-2"></button></td>
               </form>  
                 
               
                 </tr>
+              @empty
+                
+              @endforelse
               
-              @endforeach
               
             </table>
-            @if($errors->any())
-            @foreach ($errors->all() as $error)
-              <div class="alert alert-danger col-lg-12 mt-2">{{ $error }}</div>
-            @endforeach
-          @endif 
-          @if($errors->has('user_id'))
-            @foreach ($errors->get('user_id') as $errorUser)
-              <div class="alert alert-danger mt-2">{{ $errorUser }}</div>
-            @endforeach
-          @endif
+           
             <div class="mt-2">
               <button type="submit" id="submit" class="btn btn-primary me-2">GÜNCELLE</button>   
               <div id="defaultFormControlHelp" class="form-text">
@@ -97,21 +94,7 @@
                    <td><button type="submit" class="addClass btn btn-warning me-2">EKLE</button></td>
                    </tr>  
                    </table>
-                    @if($errors->has('title'))
-                        @foreach ($errors->get('title') as $error)
-                          <div class="alert alert-danger col-lg-12 mt-2">{{ $error }}</div>
-                        @endforeach
-                    @endif 
-                    @if($errors->has('rank'))
-                        @foreach ($errors->get('rank') as $error)
-                          <div class="alert alert-danger col-lg-12 mt-2">{{ $error }}</div>
-                        @endforeach
-                    @endif 
-                    @if($errors->has('user_id'))
-                        @foreach ($errors->get('user_id') as $errorUser)
-                          <div class="alert alert-danger mt-2">{{ $errorUser }}</div>
-                        @endforeach
-                    @endif
+                   
                   </form>
             </div>
         </div>

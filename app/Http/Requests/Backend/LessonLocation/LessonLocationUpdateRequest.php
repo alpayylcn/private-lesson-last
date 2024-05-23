@@ -35,8 +35,6 @@ class LessonLocationUpdateRequest extends FormRequest
         return array_merge(parent::messages(),$this->customMessages(),
         [
             'title.*.required' => 'Başlıklar boş bırakılamaz...',
-            
-            
             'title.*.unique'=>'Sıra numaraları farklı olmalıdır...'
         ]);
     }

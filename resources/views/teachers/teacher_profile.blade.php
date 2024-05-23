@@ -11,6 +11,17 @@
 @section('js')
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
+
+
+{{-- Phone number inputmask --}}
+<script>
+  $(document).ready(function(){
+      $('#phone').inputmask('0(599) 999 99 99');  // .
+  });
+</script>
+
 <script type="text/javascript">
    $(document).ready(function() {
        $('#photo').change(function(e) {
@@ -22,6 +33,7 @@
        });
    });
 </script>
+
 
 
 @endsection
@@ -66,12 +78,17 @@
                       >
                     </li>
                   </ul>
+                  @if($errors->any())
+                  @foreach ($errors->all() as $error)
+                    <div class="alert alert-danger col-lg-12 mt-2">{{ $error }}</div>
+                  @endforeach
+                @endif 
                   <div class="card mb-4"> 
                     <form method="POST" action="{{route('users_detail.update')}}" enctype="multipart/form-data">
                       @csrf
                     <h5 class="card-header">Kişisel Bilgiler</h5>
                     <!-- Account -->
-
+                   
                     
                     <div class="card-body">
 
@@ -92,7 +109,7 @@
                           </label>
                           
                           <p class="text-muted mb-0">JPG, PNG</p>
-                          
+                         
                         </div>
                       </div>
                     </div>
@@ -105,47 +122,26 @@
                             <input  type="hidden" name="user_id" id="user_id" value="{{$userData->id}}" readonly />
                             <label for="firstName" class="form-label">Adınız</label>
                             <input class="form-control" type="text"id="name"name="name"value="{{$userData->name}}" autofocus />
-                                @if($errors->has('name'))
-                                  @foreach ($errors->get('name') as $error)
-                                    <div class="alert alert-danger col-lg-12 mt-2">{{ $error }}</div>
-                                  @endforeach
-                                @endif 
-                                @if($errors->has('add_user_id'))
-                                @foreach ($errors->get('add_user_id') as $errorUser)
-                                  <div class="alert alert-danger col-lg-12 mt-2">{{ $errorUser }}</div>
-                                @endforeach
-                              @endif
+                               
                           </div>
                           
                           <div class="mb-3 col-md-6">
                             <label for="lastName" class="form-label">Soyadınız</label>
                             <input class="form-control" type="text" name="surname" id="surname" value="{{$userData->surname}}" />
-                                @if($errors->has('surname'))
-                                  @foreach ($errors->get('surname') as $error)
-                                    <div class="alert alert-danger col-lg-12 mt-2">{{ $error }}</div>
-                                  @endforeach
-                                @endif 
+                               
                           
                           </div>
                           <div class="mb-3 col-md-6">
                             <label for="email" class="form-label">E-mail Adresiniz</label>
                             <input class="form-control"type="text"id="email" name="email"value="{{$userData->email}}"/>
-                              @if($errors->has('email'))
-                                @foreach ($errors->get('email') as $error)
-                                  <div class="alert alert-danger col-lg-12 mt-2">{{ $error }}</div>
-                                @endforeach
-                              @endif 
+                              
                           </div>
                           <div class="mb-3 col-md-6">
+                            
                             <label class="form-label" for="phoneNumber">Telefon Numaranız</label>
-                            <div class="input-group input-group-merge">
-                            <input type="text" id="phone" name="phone" class="form-control" placeholder="+90" value="{{$data['userDetailData']?->phone }}" required maxlength="11" />
-                            </div>
-                              @if($errors->has('phone'))
-                                @foreach ($errors->get('phone') as $error)
-                                  <div class="alert alert-danger col-lg-12 mt-2">{{ $error }}</div>
-                                @endforeach
-                              @endif 
+                            
+                            <input type="text" id="phone" name="phone"  class="form-control"  value="{{$data['userDetailData']?->phone }}" />
+                            
                           </div>
                           
                           @include('teachers.citycounty')
@@ -185,75 +181,7 @@
                     </div>
                     <!-- /Account -->
                   </div>
-               {{-- <div class="row">
-                  <div class="col-md-4">
-                    <div class="card mb-4">
-                      <h5 class="card-header">Branş Seçenekleri</h5>
-
-                     
-
-                      
-
-                      <div class="card-body mb-3"style="overflow-y: auto; height:150px;">
-                        <label for="exampleFormControlSelect2" class="form-label">Yeni ders Ekleyiniz</label>
-                        <div class="mb-3" >
-
-                         
-                         @foreach ($data['lessons'] as $lesson)
-                     
-                           <div class="form-check checkbox payment-radio">
-                              <input class="form-check-input" name="lesson_id[{{$lesson->id}}]" type="checkbox" value="{{$lesson->id}}"  id="defaultCheck1"/>
-                              <label class="form-check-label" for="defaultCheck1"> {{$lesson->title}} </label>
-                           </div>
-                         @endforeach
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-md-4">
-                    <div class="card mb-4">
-                      <h5 class="card-header">Sınıf/Kurs Seçenekleri</h5>
-
-                      
-
-
-                         <div class="card-body mb-3" style="overflow-y: auto; height:150px;">
-                           
-                           <label for="exampleFormControlSelect2" class="form-label">Lütfen Sınıf/Kurs Türlerinden Seçiniz</label>
-                              <div class="col-md">
-                            @foreach ($data['classes'] as $class)
-                              <div class="form-check checkbox payment-radio">
-                                 <input class="form-check-input" name="class_id[{{$class->id}}]" type="checkbox" value="{{$class->id}}" id="defaultCheck1"/>
-                                 <label class="form-check-label" for="defaultCheck1"> {{$class->title}}</label>
-                              </div>
-                           @endforeach
-                              </div>
-                           
-                        </div>
-                     </div>
-                  </div>
-
-                  <div class="col-md-4">
-                     <div class="card mb-4">
-                       <h5 class="card-header">Dersi nerede vermek istersiniz?</h5>
-                       <div class="card-body mb-3"style="overflow-y: auto; height:150px;">
-                           <div class="mb-3" >
-                              <div class="input check_boxes required checkboxcontrol2">
-                                @foreach ($data['locations'] as $location)
-
-                                 <div class="form-check form-check-inline mt-3 checkbox payment-radio">
-                                    <input class="form-check-input a" name="location_id[{{$location->id}}]" type="checkbox" id="{{$location->id}}" value="{{$location->id}}" />
-                                    <label class="form-check-label" for="{{$location->id}}">{{$location->teacher_title}}</label>
-                                 </div><br>
-                                 @endforeach
-                              </div>
-                           </div>
-                       </div>
-                     </div>
-                  </div>
-               </div> --}}
-
+  
                   <div class="card mb-4">
                     <div class="card-body">
                     <div class="mt-2">
