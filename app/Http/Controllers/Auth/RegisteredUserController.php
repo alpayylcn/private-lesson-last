@@ -22,6 +22,10 @@ class RegisteredUserController extends Controller
     public function create(): View
     {
         return view('auth.register');
+    
+    }public function createTeacher(): View
+    {
+        return view('auth.teacher_register');
     }
 
     /**
@@ -45,10 +49,14 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-//user oluşturulunca user_detail tablosuna satır eklenir. userın id si ile
+        
+        //user oluşturulunca user_detail tablosuna satır eklenir. userın id si ile
         $userDetail=UserDetail::create([
             'user_id' => $user->id,
         ]);
+        
+        //Kullanıcıya rol ataması yapıyoruz. Teacher-registerden gelene 'Teacher' registerdan gelene 'Student'
+        $user->syncRoles($request->role);
 
         event(new Registered($user));
 

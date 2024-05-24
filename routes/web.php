@@ -88,7 +88,7 @@ Route::post('users_detail_update',[UserDetailController::class,'UserDetailUpdate
 
 
 //Teacher Route Section Start
-
+Route::middleware('role:Teacher')->group(function () { 
 Route::get('teachers_profile_lessons',[TeacherDetailsController::class,'lessons'])->name('teachers_profile.lessons');
 
 Route::get('teachers_profile_info',[TeacherDetailsController::class,'info'])->name('teachers_profile.info');
@@ -113,7 +113,9 @@ Route::post('teacher_lesson_to_class',[TeacherSkilController::class,'lessonToCla
 Route::get('teachers_profile_lesson_price',[TeacherToLessonPriceController::class,'lessonPrice'])->name('teachers_profile.lessonPrice');
 Route::post('teacher_to_lesson_price_update',[TeacherToLessonPriceController::class,'lessonToPriceUpdate'])->name('teacher_to_lesson_price.lessonToPriceUpdate');
 //Teacher Lesson To Price Route End
+});
 
+Route::middleware('role:Super-Admin')->group(function () { 
 //Lessons Route Section Start
 Route::get('add_lessons_list',[LessonController::class,'addLessonList'])->name('lessons.addLessonList');
 Route::post('add_lessons_store',[LessonController::class,'store'])->name('lessons.addLessonStore');
@@ -137,9 +139,7 @@ Route::post('add_relation_lessons_to_classes_update',[AddRelationshipLessonAndCl
 Route::post('admin_lesson_to_class',[AddRelationshipLessonAndClassController::class,'adminLessonToClassesAjax'])->name('admin_lesson_to_class.adminLessonToClassesAjax');
 //Admin add Lesson_and_Classes Section End
 
-//Admin Route Section Start
-Route::get('admin_dashboard',[AdminController::class,'index'])->name('admin_dashboard.index');
-//Admin Route Section End
+
 
 //Admin Filter Section Start
 Route::get('admin_filter_items',[AdminController::class,'filterItems'])->name('admin.filterItems');
@@ -155,8 +155,11 @@ Route::get('admin_filter_lesson_time_period_edit',[FilterLessonTimePeriodControl
 Route::get('admin_filter_lesson_start_time_edit',[FilterLessonStartTimeController::class,'filterLessonStartTimeEdit'])->name('admin.filterLessonStartTimeEdit');
 Route::get('admin_filter_lesson_type_edit',[FilterTypeController::class,'filterLessonTypeEdit'])->name('admin.filterLessonTypeEdit');
 //Admin Filter Section End
+});
 
-
+//Admin Route Section Start
+Route::get('admin_dashboard',[AdminController::class,'index'])->name('admin_dashboard.index');
+//Admin Route Section End
 
 //City County js Home
 Route::post('api/fetch-county',[UserDetailController::class,'fetchCounty'])->name('fetch.county');

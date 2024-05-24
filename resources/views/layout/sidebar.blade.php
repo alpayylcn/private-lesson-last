@@ -82,7 +82,7 @@
       <li class="menu-header small text-uppercase">
         <span class="menu-header-text">SUPER ADMIN</span>
       </li>
-      <li class="menu-item">
+        <li class="menu-item">
         <a href="" class="menu-link menu-toggle">
           <i class="menu-icon tf-icons bx bx-dock-top"></i>
           <div data-i18n="Account Settings">Kişisel Bilgiler</div>
@@ -111,11 +111,14 @@
           <div data-i18n="Authentications">Giriş / Güvenlik</div>
         </a>
         <ul class="menu-sub">
+          @role('Super-Admin')
           <li class="menu-item">
             <a href="auth-login-basic.html" class="menu-link" target="_blank">
               <div data-i18n="Basic">Yetkilendirmeler</div>
             </a>
           </li>
+          @endrole
+          
           <li class="menu-item">
             <a href="auth-register-basic.html" class="menu-link" target="_blank">
               <div data-i18n="Basic">Şifremi Değiştir</div>
@@ -124,6 +127,7 @@
         </ul>
       </li>
       
+      @role('Super-Admin')
       <!-- Formlar -->
       <li class="menu-header small text-uppercase"><span class="menu-header-text">Formlar</span></li>
       
@@ -183,7 +187,7 @@
             <div data-i18n="Tables">Öğrenci Listesi</div>
           </a>
         </li>
-      
+      @endrole
       <!-- Destek -->
       <li class="menu-header small text-uppercase"><span class="menu-header-text">Destek</span></li>
       <li class="menu-item">

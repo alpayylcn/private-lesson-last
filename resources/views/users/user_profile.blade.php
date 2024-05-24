@@ -49,14 +49,13 @@
               <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Ayarlar /</span> Profil Sayfası</h4>
 
               <div class="row">
-                {{-- <form method="POST" action="{{route('teachers_profile.update')}}" enctype="multipart/form-data">
-                  @csrf  --}}
-                  <input type="hidden" name="user_id" value="1">
+               <input type="hidden" name="user_id" value="1">
                 <div class="col-md-12">
                   <ul class="nav nav-pills flex-column flex-md-row mb-3">
                     <li class="nav-item">
                       <a class="nav-link active" href="javascript:void(0);"><i class="bx bx-user me-1"></i> Kişisel Bilgiler</a>
                     </li>
+                    @role('Teacher')
                     <li class="nav-item">
                       <a class="nav-link" href="{{route('teachers_profile.lessons')}}"
                         ><i class="bx bx-blanket  me-1"></i>Ders Sınıf Seçimi</a
@@ -77,6 +76,7 @@
                         ><i class="bx bx-world me-1"></i> Profil Önizleme</a
                       >
                     </li>
+                    @endrole
                   </ul>
                   @if($errors->any())
                   @foreach ($errors->all() as $error)

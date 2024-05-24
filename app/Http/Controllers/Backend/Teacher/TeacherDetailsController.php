@@ -27,7 +27,7 @@ class TeacherDetailsController extends Controller
         $id = Auth::user()->id;
         $userData = User::find($id);
         $data=$this->teacherGeneralService->general();
-        return view('teachers.teacher_profile',compact('data','userData'));
+        return view('users.user_profile',compact('data','userData'));
     }
     public function lessons(){
         $data=$this->teacherGeneralService->general();

@@ -37,7 +37,7 @@ class UserDetailController extends Controller
         }
         $allCity=City::get();
         //dd($cityData);
-        return view('teachers.teacher_profile',compact('userData','userDetailData','cityData','allCity','data'));
+        return view('users.user_profile',compact('userData','userDetailData','cityData','allCity','data'));
     }
 
     public function UserDetailUpdate(UserDetailRequest $request){

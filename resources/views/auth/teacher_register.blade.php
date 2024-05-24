@@ -154,8 +154,8 @@
                     </div>
                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                   </div>
-                  <input type="hidden" name="role" value="Student">
-                <button class="btn btn-warning d-grid w-100">Kayıt Ol</button>
+              <input type="hidden" name="role" value="Teacher">
+                <button class="btn btn-primary d-grid w-100">Kayıt Ol</button>
               </form>
 
               <p class="text-center">
