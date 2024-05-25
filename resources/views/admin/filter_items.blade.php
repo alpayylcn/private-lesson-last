@@ -27,7 +27,17 @@
     <input type="hidden" name="user_id" value="{{$userId}}">
   <div class="col-md-12">
     {{-- Top Buttons Start --}}
-    @include('admin.layout.tabs_filter_items')
+    <ul class="nav nav-pills flex-column flex-md-row mb-3">
+      <li class="nav-item">
+        <a class="nav-link  active" href="{{route('admin.filterItems')}}">
+        <i class="bx bx-blanket  me-1"></i>Filtre Adımları / Sorular</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link border " href="{{route('admin.stepQuestions')}}">
+        <i class="bx bx-blanket  me-1"></i>Opsiyonları Düzenle</a>
+      </li>
+       
+      </ul> 
     {{-- Top Buttons End --}}
     @if($errors->any())
       @foreach ($errors->all() as $error)
@@ -47,16 +57,15 @@
               <th>Sıra Numarası</th>
               @forelse ($data as $question )
                 <tr id="{{$question->id}}"> 
-                <td class="col-10"><input type="text" disabled name="title[{{$question->id}}]" class="form-control" value="{{$question->title}}" placeholder=""></td>
-                <td><input type="text" name="title[{{$question->id}}]" class="form-control" value="{{$question->rank}}" placeholder=""></td>
-              <form method="POST" action="{{route('admin.filterItemsDelete')}}">
-                <td><button id="{{$question->id}}" type="submit" class="form-control btn-danger"><i class="bx bx-trash  me-2"></button></td>
-              </form>  
+                <td class="col-10"><input type="text" name="title[{{$question->id}}]" class="form-control" value="{{$question->title}}" placeholder=""></td>
+                <td><input type="text" name="rank[{{$question->id}}]" class="form-control" value="{{$question->rank}}" placeholder=""></td>
+                <td><button id="{{$question->id}}" type="button" class="btnstepforcedelete form-control btn-danger"><i class="bx bx-trash  me-2"></button></td>
+              
                 
               
                 </tr>
               @empty
-                
+                <tr><td>KAYITLI SORU BULUNAMADI</td></tr>
               @endforelse
               
               
@@ -115,6 +124,50 @@
 @endsection
 
 @section('js')
-
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  $('.btnstepforcedelete').click(function() {
+    var id = $(this).attr('id');
+    Swal.fire({
+            title: 'Tamamen Silmek Üzeresin',
+            text: "Bu İşlem Geri Alınamaz",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet Sil',
+            cancelButtonText: 'Hayır Vazgeç'
+        }).then((result) => {
+            if (result.isConfirmed) {
+              $.ajax({
+                    type: "post",
+                    url: "{{route('admin.filterItemsDelete')}}",
+                    data:{_token:"{{ csrf_token() }}",id:id},
+                    success: function(msg) {
+                    if (msg) {
+                      Swal.fire(
+                      'Silindi!',
+                      'İşleminiz Başarılı Bir Şekilde Gerçekleştirildi.',
+                      'success'
+                  );
+                      setTimeout(function(){
+                      window.location.reload(1);
+                      }, 1000);
+  
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // Hata durumunda SweetAlert2 ile bir hata mesajı gösterilebilir
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: 'Üzgünüz İşleminiz gerçekleştirilemedi.'
+                        });
+                    }
+                    
+                });
+            }
+   });
+  });
+  </script>
 @endsection

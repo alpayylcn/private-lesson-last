@@ -53,15 +53,36 @@ class AdminController extends Controller
     public function filterItems()
     {   
         $userId=Auth::user()->id;
-       
+        
         $data=$this->stepQuestionService->getWithWhere();
         //dd($data->title);
         return view('admin.filter_items',compact('data','userId'));
         
     }
+
+    public function getStepOptionTitles($id)
+    {
+        $stepQuestion = StepQuestion::with('stepOptionTitles')->find($id);
+        
+        if (!$stepQuestion) {
+            return response()->json(['message' => 'Step question not found'], 404);
+        }
+        
+        return response()->json($stepQuestion->stepOptionTitles);
+    
+    }
+    public function filterItemsOptions()
+    {   
+        $userId=Auth::user()->id;
+        
+        $data=$this->stepQuestionService->getWithWhere();
+        //dd($data->title);
+        return view('admin.filter_items_and_options',compact('data','userId'));
+        
+    }
     public function filterItemsAdd(StepQuestionAddRequest $request)
     {   
-       // dd('soru ekleme',$request);
+       //dd('soru ekleme',$request);
         $userId=Auth::user()->id;
        
         $questionAdd=$this->stepQuestionService->create($request->except('_token'));
@@ -75,19 +96,27 @@ class AdminController extends Controller
         
     }
     public function filterItemsUpdate(StepQuestionRequest $request)
-    {
+    {//dd($request);
         $userId=Auth::user()->id;
-        foreach ($request->title as $id => $rank) 
+        foreach ($request->rank as $id => $rank) 
         {
             // ID'ye göre modeli bul
             
-            $model = StepQuestion::find($id);
-            //dd($model);
-            // Eğer model bulunursa ve rank değeri farklıysa güncelle
-            if ($model && $model->rank != $rank) {
-                $model->rank = $rank;
-                $model->save(); // Güncelleme işlemi
-            }  
+            // $model = StepQuestion::find($id);
+            // //dd($model);
+            // // Eğer model bulunursa ve rank değeri farklıysa güncelle
+            // if ($model && $model->rank != $rank) {
+            //     $model->rank = $rank;
+            //     $model->save(); // Güncelleme işlemi
+            // }  
+
+
+            $updateQuestion=StepQuestion::where('id', $id)->update([
+                
+                'rank'=>$rank,
+                'title'=>$request->title[$id],
+                ]); 
+            
         }
         $data=$this->stepQuestionService->getWithWhere();
         toastr()->success('Güncelleme İşlemi Başarılı', 'Başarılı', ["positionClass" => "toast-top-right"]);
@@ -95,12 +124,15 @@ class AdminController extends Controller
         
     }
     public function filterItemsDelete(Request $request)
-    {   dd('$request');
-        $userId=Auth::user()->id;
+    {   
+        if(!empty($request->id))
+        {
+            $data=$this->stepQuestionService->delete($request->id);
+                if (!empty ($data)){
+                    return redirect()->back();
+                }
+        }
        
-        $data=$this->stepQuestionService->getWithWhere();
-        //dd($data->title);
-        return view('admin.filter_items',compact('data','userId'));
         
     }
     public function create()

@@ -21,23 +21,28 @@ class StepQuestionRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
+            'rank.*' =>[
+                'required',
+                // 'unique:step_questions,rank'
+            ],  
             'title.*' =>[
                 'required',
                 // 'unique:step_questions,rank'
             ],  
-           
+            
         ];
         return array_merge($this->addUserRules(),$rules); 
-    }
+    }   
 
-    public function messages()
+    public function messages()      
     {
         return array_merge(parent::messages(),$this->customMessages(),
         [
-            'title.*.required' => 'Sıra numaraları boş olamaz...',
+            'rank.*.required' => 'Sıra numaraları boş olamaz...',
+            'title.*.required' => 'Soru alanı boş bırakılamaz...',
+
             
-            
-            'title.*.unique'=>'Sıra numaraları farklı olmalıdır...'
+            'rank.*.unique'=>'Sıra numaraları farklı olmalıdır...'
         ]);
     }
 }

@@ -28,6 +28,7 @@ use App\Http\Controllers\Backend\WalletSpentMoneyController;
 use App\Http\Controllers\Backend\WalletTransactionController;
 use App\Http\Controllers\Backend\WalletTransactionTypeController;
 use App\Http\Controllers\Backend\Admin\AdminController;
+use App\Http\Controllers\StepQuestionController;
 use App\Http\Controllers\UserDetailController;
 use Illuminate\Support\Facades\Route;
 
@@ -143,6 +144,15 @@ Route::post('admin_lesson_to_class',[AddRelationshipLessonAndClassController::cl
 
 //Admin Filter Section Start
 Route::get('admin_filter_items',[AdminController::class,'filterItems'])->name('admin.filterItems');
+Route::get('admin_filter_items_options',[AdminController::class,'filterItemsOptions'])->name('admin.filterItemsOptions');
+
+Route::get('/step-questions', [StepQuestionController::class, 'index'])->name('admin.stepQuestions');
+Route::get('/step-questions/{id}/step-option-titles', [StepQuestionController::class, 'getStepOptionTitles']);
+Route::post('admin_filter_options_update',[StepQuestionController::class,'filterOptionsUpdate'])->name('admin.filterOptionsUpdate');
+Route::post('admin_filter_options_add',[StepQuestionController::class,'filterOptionsAdd'])->name('admin.filterOptionsAdd');
+Route::post('admin_filter_options_delete',[StepQuestionController::class,'filterOptionsDelete'])->name('admin.filterOptionsDelete');
+
+
 Route::post('admin_filter_items_add',[AdminController::class,'filterItemsAdd'])->name('admin.filterItemsAdd');
 Route::post('admin_filter_items_update',[AdminController::class,'filterItemsUpdate'])->name('admin.filterItemsUpdate');
 Route::post('admin_filter_items_delete',[AdminController::class,'filterItemsDelete'])->name('admin.filterItemsDelete');

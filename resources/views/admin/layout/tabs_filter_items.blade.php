@@ -1,5 +1,17 @@
 <ul class="nav nav-pills flex-column flex-md-row mb-3">
-      
+  <li class="nav-item">
+    <a class="nav-link  active" href="{{route('admin.filterItems')}}">
+    <i class="bx bx-blanket  me-1"></i>Filtre Adımları / Sorular</a>
+  </li>
+   @forelse ($data as $question)
+   <li class="nav-item">
+    <a class="nav-link border" href="{{route('admin.filterItems')}}">
+    <i class="bx bx-blanket  me-1"></i>{{$question->title}}</a>
+  </li>
+   @empty
+     <li>KAYITLI SORU BULUNAMADI</li>
+   @endforelse
+  </ul>   
   <li class="nav-item">
     <a class="nav-link  active" href="{{route('admin.filterItems')}}">
     <i class="bx bx-blanket  me-1"></i>Filtre Adımları / Sorular</a>

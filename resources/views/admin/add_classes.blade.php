@@ -27,7 +27,11 @@
     {{-- Top Buttons Start --}}
       @include('admin.layout.tabs_lesson_and_class')
     {{-- Top Buttons End --}}
-
+    @if($errors->has('any'))
+    @foreach ($errors->get('all') as $error)
+      <div class="alert alert-danger col-lg-9">{{ $error }}</div>
+    @endforeach
+  @endif
     <div class="card mb-4">
       <h5 class="card-header">SINIF/KURS/GRUP EKLEME <small>(11. Sınıf, 12. Sınıf, LGS, TYT vs.)</small></h5>
       
@@ -43,17 +47,7 @@
             </div>
               </form>   
               </tr>
-              @if($errors->has('title'))
-                @foreach ($errors->get('title') as $error)
-                  <div class="alert alert-danger col-lg-9">{{ $error }}</div>
-                @endforeach
-              @endif
-              @if($errors->has('add_user_id'))
-                @foreach ($errors->get('add_user_id') as $errorUser)
-                  <div class="alert alert-danger">{{ $errorUser }}</div>
-                @endforeach
-              @endif
-            
+              
         </div>
 
         <div class="col-lg-4 mb-4 mb-xl-0">
@@ -67,8 +61,8 @@
                   </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
-                  @foreach ($classData as $class)
-                  @if(!$class->trashed())
+                  @forelse ($classData as $class)
+                    @if(!$class->trashed())
                     <tr>
                       <td class="p-2"><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{$class->title}} </strong></td>
                       <td class="p-2">
@@ -82,7 +76,10 @@
                       <td class="p-2"><input type="hidden" name="lesson_id" value="{{$class->id}}"></td>
                     </tr>
                   @endif
-                  @endforeach
+                  @empty
+                    <td class="p-2">Sınıf bulunamadı</td>
+                  @endforelse
+                  
                 </tbody>
               </table>
             </div>
@@ -102,8 +99,7 @@
                 
                
                 @php $index = 0; @endphp
-                @foreach ($classDataTrashed as $index=> $class)
-                
+                @forelse ($classDataTrashed as $index=> $class)
                   <tr>
                     <td class="p-2"><strong>{{$class->title}} </strong></td>
                     <td class="p-2"><button type="button"  id="{{$class->id}}" class="btn btn-link text-info btnclssrestore"><i class="bx bx-show me-1"></i> Aktif Et</button></td>
@@ -112,7 +108,10 @@
                     @endif
                   </tr>
               
-              @endforeach
+                @empty
+                <td class="p-2">Pasif Sınıf Bulunamadı</td>
+                @endforelse
+               
               @if ($index!=0)
               <tr>
                 <td colspan="3"><button type="button" class="btn btn-link text-danger btnclssforcedelete">

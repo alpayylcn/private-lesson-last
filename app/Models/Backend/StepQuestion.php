@@ -26,4 +26,9 @@ class StepQuestion extends Model
     {
         return $this->hasMany(StepOption::class,'id','question_id');
     } 
+
+    public function stepOptionTitle() :Hasmany
+    {
+        return $this->hasMany(StepOptionTitle::class,'question_id','id');
+    }
 }

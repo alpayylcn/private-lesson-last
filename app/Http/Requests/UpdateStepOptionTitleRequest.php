@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Backend\StepQuestion;
+namespace App\Http\Requests;
 
 use App\Http\Requests\Traits\ValidateUserTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StepQuestionAddRequest extends FormRequest
+class UpdateStepOptionTitleRequest extends FormRequest
 {
     use ValidateUserTrait;
     public function authorize(): bool
@@ -21,15 +21,16 @@ class StepQuestionAddRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-           'title'=>[
-                'required',
-             ],
-             'rank'=>[
-                'required',
-                'unique:step_questions,rank'
-             ],
-        ];
-        return array_merge($this->addUserRules(),$rules); 
+            'title'=>[
+                 'required',
+              ],
+            'question_id'=>[
+                'required'
+              ]
+            
+              
+         ];
+         return array_merge($this->addUserRules(),$rules); 
     }
 
     public function messages()
@@ -37,9 +38,9 @@ class StepQuestionAddRequest extends FormRequest
         return array_merge(parent::messages(),$this->customMessages(),
         [
             
-            'title.required' => 'Soru alanı boş olamaz...',
-            'rank.required' => 'Sıra numarası boş olamaz...',
-            'rank.unique' => 'Sıra numarasına ait bir soru daha önce kaydedilmiş...',
+            'title.required' => 'Öğrencinin Göreceği Başlık Boş Bırakılamaz...',
+            'question_id.required' => 'Başlığı hangi sorunun altına ekleyeceğinizi seçmelisiniz...',
+           
            
         ]);
     }
