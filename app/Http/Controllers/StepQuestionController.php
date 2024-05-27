@@ -24,7 +24,7 @@ class StepQuestionController extends Controller
        
         if(!empty($optionAdd)){
             toastr()->success('Ekleme İşlemi Başarılı', 'Başarılı', ["positionClass" => "toast-top-right"]);
-            return back();
+            return response()->json($optionAdd, 201);
         }  
     }
 
@@ -53,8 +53,8 @@ class StepQuestionController extends Controller
     }
 
     public function filterOptionsUpdate(Request $request)
-    {
-       
+    { 
+       dd($request);
             foreach($request->title as $key => $title)
                 {
                    $updateOption=StepOptionTitle::where('id', $key)->update([

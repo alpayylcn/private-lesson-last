@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\StepQuestion\StepQuestionAddRequest;
 use App\Http\Requests\Backend\StepQuestion\StepQuestionRequest;
+use App\Models\Backend\StepOptionTitle;
 use App\Models\Backend\StepQuestion;
 use App\Services\Backend\ClassService;
 use App\Services\Backend\LessonService;
@@ -86,7 +87,10 @@ class AdminController extends Controller
         $userId=Auth::user()->id;
        
         $questionAdd=$this->stepQuestionService->create($request->except('_token'));
+       // dd($questionAdd->id);
+        
         if(!empty($questionAdd)){
+            $stepOptionsTitle=StepOptionTitle::create(['question_id'=>$questionAdd->id]);
            $data=$this->stepQuestionService->getWithWhere();
         //dd($data->title);
         toastr()->success('Ekleme İşlemi Başarılı', 'Başarılı', ["positionClass" => "toast-top-right"]);
@@ -100,17 +104,7 @@ class AdminController extends Controller
         $userId=Auth::user()->id;
         foreach ($request->rank as $id => $rank) 
         {
-            // ID'ye göre modeli bul
-            
-            // $model = StepQuestion::find($id);
-            // //dd($model);
-            // // Eğer model bulunursa ve rank değeri farklıysa güncelle
-            // if ($model && $model->rank != $rank) {
-            //     $model->rank = $rank;
-            //     $model->save(); // Güncelleme işlemi
-            // }  
-
-
+           
             $updateQuestion=StepQuestion::where('id', $id)->update([
                 
                 'rank'=>$rank,
@@ -129,6 +123,7 @@ class AdminController extends Controller
         {
             $data=$this->stepQuestionService->delete($request->id);
                 if (!empty ($data)){
+                    $optionDelete=StepOptionTitle::where('question_id',$request->id)->delete();
                     return redirect()->back();
                 }
         }

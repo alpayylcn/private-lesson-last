@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('step_option_titles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('question_id')->constrained('step_questions')->onDelete('cascade');
-            $table->string('title');
-            $table->string('teacher_title');
+            $table->string('title')->nullable();
+            $table->string('teacher_title')->nullable();
             $table->timestamps();
         });
     }

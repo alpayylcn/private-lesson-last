@@ -18,32 +18,30 @@ id="layout-navbar"
       <input
         type="text"
         class="form-control border-0 shadow-none"
-        placeholder="Search..."
-        aria-label="Search..."
+        placeholder="Ara..."
+        aria-label="Ara..."
       />
     </div>
   </div>
   <!-- /Search -->
 
   <ul class="navbar-nav flex-row align-items-center ms-auto">
-    <!-- Place this tag where you want the button to render. -->
-    <li class="nav-item lh-1 me-3">
-      <a
-        class="github-button"
-        href="https://github.com/themeselection/sneat-html-admin-template-free"
-        data-icon="octicon-star"
-        data-size="large"
-        data-show-count="true"
-        aria-label="Star themeselection/sneat-html-admin-template-free on GitHub"
-        >Star</a
-      >
-    </li>
+    
 
     <!-- User -->
     <li class="nav-item navbar-dropdown dropdown-user dropdown">
       <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
         <div class="avatar avatar-online">
-          <img src="{{asset('backend/assets')}}/img/avatars/teachers_avatar_female.jpg" alt class="w-px-40 h-auto rounded-circle" />
+          
+          
+          
+          @if (Auth::check())
+          
+          {{-- <img src="{{ Auth::user()->profile_image ?: '/no_image.jpg' }}" alt="Profil Resmi" style="width: 150px; height: 150px; border-radius: 50%;" /> --}}
+        
+        
+
+          <img src="{{asset('backend/assets')}}/img/profileimages/{{ Auth::user()->userDetails->profile_image ?: '/no_image.jpg' }}" alt class="w-px-40 h-px-40 rounded-circle" />
         </div>
       </a>
       <ul class="dropdown-menu dropdown-menu-end">
@@ -52,11 +50,11 @@ id="layout-navbar"
             <div class="d-flex">
               <div class="flex-shrink-0 me-3">
                 <div class="avatar avatar-online">
-                  <img src="{{asset('backend/assets')}}/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                  <img src="{{asset('backend/assets')}}/img/profileimages/{{ Auth::user()->userDetails->profile_image ?: '/no_image.jpg' }}" alt class="w-px-40 h-px-40 rounded-circle" />
                 </div>
               </div>
               <div class="flex-grow-1">
-                <span class="fw-semibold d-block">...</span>
+                <span class="fw-semibold d-block">{{ Auth::user()->name }}</span>
                 <small class="text-muted">Matematik</small>
               </div>
             </div>
@@ -78,7 +76,7 @@ id="layout-navbar"
           </a>
         </li>
         <li>
-          <a class="dropdown-item" href="#">
+          <a class="dropdown-item" href="">
             <span class="d-flex align-items-center align-middle">
               <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
               <span class="flex-grow-1 align-middle">Billing</span>
@@ -89,19 +87,24 @@ id="layout-navbar"
         <li>
           <div class="dropdown-divider"></div>
         </li>
-        <li>
+        
+        <li class="dropdown-item">
           
           <form method="POST" action="{{ route('logout') }}">
             @csrf
-
+            <i class="flex-shrink-0 bx bx-log-out me-2"></i>
             <x-responsive-nav-link :href="route('logout')"
                     onclick="event.preventDefault();
                                 this.closest('form').submit();">
-                {{ __('Log Out') }}
+                {{ __('Çıkış') }}
             </x-responsive-nav-link>
         </form>
         </li>
       </ul>
+          @else
+          <p>Lütfen giriş yapınız.</p>
+        @endif
+
     </li>
     <!--/ User -->
   </ul>

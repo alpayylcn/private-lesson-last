@@ -79,9 +79,21 @@
 
       
       <!-- Süper Admin -->
+      @role('Super-Admin')
       <li class="menu-header small text-uppercase">
         <span class="menu-header-text">SUPER ADMIN</span>
       </li>
+      @endrole
+      @role('Teacher')
+      <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">ÖĞRETMEN</span>
+      </li>
+      @endrole
+      @role('Student')
+      <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">ÖĞRENCİ</span>
+      </li>
+      @endrole
         <li class="menu-item">
         <a href="" class="menu-link menu-toggle">
           <i class="menu-icon tf-icons bx bx-dock-top"></i>
@@ -105,29 +117,25 @@
           </li>
         </ul>
       </li>
+      @role('Super-Admin')
       <li class="menu-item">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
           <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
-          <div data-i18n="Authentications">Giriş / Güvenlik</div>
+          <div data-i18n="Authentications">Yetkilendirmeler</div>
         </a>
         <ul class="menu-sub">
-          @role('Super-Admin')
+          
           <li class="menu-item">
             <a href="auth-login-basic.html" class="menu-link" target="_blank">
               <div data-i18n="Basic">Yetkilendirmeler</div>
             </a>
           </li>
-          @endrole
           
-          <li class="menu-item">
-            <a href="auth-register-basic.html" class="menu-link" target="_blank">
-              <div data-i18n="Basic">Şifremi Değiştir</div>
-            </a>
-          </li>
+          
+          
         </ul>
       </li>
       
-      @role('Super-Admin')
       <!-- Formlar -->
       <li class="menu-header small text-uppercase"><span class="menu-header-text">Formlar</span></li>
       

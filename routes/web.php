@@ -147,7 +147,7 @@ Route::get('admin_filter_items',[AdminController::class,'filterItems'])->name('a
 Route::get('admin_filter_items_options',[AdminController::class,'filterItemsOptions'])->name('admin.filterItemsOptions');
 
 Route::get('/step-questions', [StepQuestionController::class, 'index'])->name('admin.stepQuestions');
-Route::get('/step-questions/{id}/step-option-titles', [StepQuestionController::class, 'getStepOptionTitles']);
+Route::get('/step-questions/{id}/step-option-titles', [StepQuestionController::class, 'getStepOptionTitles'])->name('admin.filterOptionsTitles');
 Route::post('admin_filter_options_update',[StepQuestionController::class,'filterOptionsUpdate'])->name('admin.filterOptionsUpdate');
 Route::post('admin_filter_options_add',[StepQuestionController::class,'filterOptionsAdd'])->name('admin.filterOptionsAdd');
 Route::post('admin_filter_options_delete',[StepQuestionController::class,'filterOptionsDelete'])->name('admin.filterOptionsDelete');

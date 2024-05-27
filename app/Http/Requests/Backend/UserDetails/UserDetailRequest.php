@@ -36,6 +36,8 @@ class UserDetailRequest extends FormRequest
             ],
             'email' =>[
                 'required',
+                'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+                'email'
             ],
             'phone' =>[
                 'required', 
@@ -64,6 +66,8 @@ class UserDetailRequest extends FormRequest
             'surname.max' => 'Soyad alanına en fazla 20 karakter yazabilirsiniz...',
             'surname.min' => 'Soyad alanına en az 2 karakter yazmalısınız...',
             'email.required' => 'E Mail alanı boş bırakılamaz...',
+            'email.regex' => 'E Mail alanı formata uygun olmalı...',
+            'email.email' => 'Geçerli bir E Mail adresi girin...',
             'phone.required' => 'Telefon alanı boş bırakılamaz...',
             'phone.regex' => 'Lütfen telefon numaranızı formata uygun olarak yazınız... ',
             'city.required' => 'Şehir alanı boş bırakılamaz...',
