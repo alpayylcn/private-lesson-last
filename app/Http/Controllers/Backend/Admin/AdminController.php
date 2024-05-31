@@ -56,8 +56,9 @@ class AdminController extends Controller
         $userId=Auth::user()->id;
         
         $data=$this->stepQuestionService->getWithWhere();
+        $stepCount=$this->stepQuestionService->getWithWhere();
         //dd($data->title);
-        return view('admin.filter_items',compact('data','userId'));
+        return view('admin.filter_items',compact('data','userId','stepCount'));
         
     }
 

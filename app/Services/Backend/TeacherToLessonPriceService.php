@@ -5,6 +5,7 @@ use App\Models\Backend\TeacherToLessonPrice;
 use Illuminate\Support\Facades\Log;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TeacherToLessonPriceService{
 
@@ -18,7 +19,7 @@ class TeacherToLessonPriceService{
     ){} 
     
     public function listTeacherLessonPrice(){
-    $id=1;
+    $id = Auth::user()->id;
     $lessonPrice=$this->getWithWhere(['user_id'=>$id]);
     $teacherToLesson=$this->teacherToLessonAndClassService->getWithWhereLesson(['user_id'=>$id]); 
     return compact('lessonPrice','teacherToLesson');

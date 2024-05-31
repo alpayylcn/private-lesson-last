@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('unregistered_students', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255)->comment("Kayıtsız Öğrencinin adı");
-            $table->string('surname',255)->comment("Kayıtsız Öğrencinin soyadı");
-            $table->string('mail',255)->comment("Kayıtsız Öğrencinin mail adresi");
+            $table->string('name',255)->nullable()->comment("Kayıtsız Öğrencinin adı");
+            $table->string('surname',255)->nullable()->comment("Kayıtsız Öğrencinin soyadı");
+            $table->string('mail',255)->nullable()->comment("Kayıtsız Öğrencinin mail adresi");
+            $table->string('phone')->nullable()->comment("Kayıtsız Öğrencinin telefon numarası");
             
             $table->timestamps();
             $table->softDeletes()->comment("Çöp Kutusu");

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Teacher;
 use App\Http\Controllers\Controller;
 use App\Services\Backend\TeacherToLessonAndClassService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TeacherToLessonAndClassController extends Controller
 {   
@@ -56,7 +57,7 @@ class TeacherToLessonAndClassController extends Controller
     public function updateorCreate(Request $request, string $id)
     {   
         
-        $id=1;
+        $id = Auth::user()->id;
         $data=$this->teacherToLessonAndClassService->updateOrCreate($request->all(),$id);
     }
 

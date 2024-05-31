@@ -18,7 +18,7 @@
     {{-- Top Buttons End --}}
     
     <div class="row">
-      <form method="POST" action="{{route('admin.filterOptionsUpdate')}}" enctype="multipart/form-data">
+      <form method="POST" action="{{route('admin.filterOptionsUpdate')}}" >
         @csrf 
         <input type="hidden" name="user_id" value="{{$userId}}">
       <div class="col-md-12">
@@ -76,7 +76,7 @@
                
 
                 <div class="mt-2">
-                  <button type="submit" id="submit" class="btn btn-primary me-2">GÜNCELLE</button>   
+                  <button type="submit"  class="btn btn-primary me-2 ">GÜNCELLE</button>   
                   <div id="defaultFormControlHelp" class="form-text">
                     Güncelle butonuna bastığınızda verdiğiniz bilgilerin doğruluğunu onaylamış olursunuz.
                   </div>
@@ -165,8 +165,8 @@
                             
                             var newRow = `
                             <tr id="item-${stepOptionTitle.id}">
-                                <td class="col-6"><input type="text" name="title[${stepOptionTitle.id}]" class="form-control" value="${stepOptionTitle.title ?? ''}" placeholder=""></td>
-                                <td class="col-6"><input type="text" name="teacher_title[${stepOptionTitle.id}]" class="form-control" value="${stepOptionTitle.teacher_title ?? ''} " placeholder=""></td>
+                                <td class="col-6"><input type="text" name="option_title[${stepOptionTitle.id}]" class="form-control" value="${stepOptionTitle.title ?? ''}" placeholder=""></td>
+                                <td class="col-6"><input type="text" name="option_teacher_title[${stepOptionTitle.id}]" class="form-control" value="${stepOptionTitle.teacher_title ?? ''} " placeholder=""></td>
                                 <td><button id="${stepOptionTitle.id}" type="button" class="btnoptionforcedelete form-control btn-danger"><i class="bx bx-trash  me-2"></button></td>
                                 <input type="hidden" name="question_id"value="${stepOptionTitle.question_id}">
                             </tr>
@@ -253,16 +253,21 @@
         .then(response => response.json())
         .then(stepOptionTitle => {
                 // Yeni satırı oluştur
-                var newRow = `
-                    <tr>
-                        <td class="col-6"><input type="text" name="title[${stepOptionTitle.id}]" class="form-control" value="${stepOptionTitle.title ?? ''}" placeholder=""></td>
-                        <td class="col-6"><input type="text" name="teacher_title[${stepOptionTitle.id}]" class="form-control" value="${stepOptionTitle.teacher_title ?? ''}" placeholder=""></td>
-                        <td><button id="${stepOptionTitle.id}" type="button" class="btnoptionforcedelete form-control btn-danger"><i class="bx bx-trash  me-2"></i></button></td>
-                        <input type="hidden" name="question_id" value="${stepOptionTitle.question_id}">
-                    </tr>
-                `;
-                // Yeni satırı tablonun sonuna ekle
-                $('#step-option-titles').append(newRow);
+                $('#step-option-titles').empty();
+                            response.forEach(function(stepOptionTitle) {
+
+                            
+                            var newRow = `
+                            <tr id="item-${stepOptionTitle.id}">
+                                <td class="col-6"><input type="text" name="option_title[${stepOptionTitle.id}]" class="form-control" value="${stepOptionTitle.title ?? ''}" placeholder=""></td>
+                                <td class="col-6"><input type="text" name="option_teacher_title[${stepOptionTitle.id}]" class="form-control" value="${stepOptionTitle.teacher_title ?? ''} " placeholder=""></td>
+                                <td><button id="${stepOptionTitle.id}" type="button" class="btnoptionforcedelete form-control btn-danger"><i class="bx bx-trash  me-2"></button></td>
+                                <input type="hidden" name="question_id"value="${stepOptionTitle.question_id}">
+                            </tr>
+                        `;
+                           
+                            $('#step-option-titles').append(newRow);
+                            });
                
             })
             .catch((error) => {
@@ -273,6 +278,54 @@
     
 
 </script>
+
+<script>
+  $('.btnoptionupdate').click(function() {
+  const userId = document.getElementById('user_id').value;
+  const questionId = document.getElementById('question_id').value;
+  const title = document.getElementById('option_title').value;
+  const teacherTitle = document.getElementById('option_teacher_title').value;
+
+  const data = { 
+      user_id: userId, 
+      question_id: questionId, 
+      option_title: title,
+      option_teacher_title: teacherTitle 
+  };
+
+  fetch("{{ route('admin.filterOptionsUpdate') }}", {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(stepOptionTitle => {
+          // Yeni satırı oluştur
+          var newRow = `
+              <tr>
+                  <td class="col-6"><input type="text" name="option_title[${stepOptionTitle.id}]" class="form-control" value="${stepOptionTitle.title ?? ''}" placeholder=""></td>
+                  <td class="col-6"><input type="text" name="option_teacher_title[${stepOptionTitle.id}]" class="form-control" value="${stepOptionTitle.teacher_title ?? ''}" placeholder=""></td>
+                  <td><button id="${stepOptionTitle.id}" type="button" class="btnoptionforcedelete form-control btn-danger"><i class="bx bx-trash  me-2"></i></button></td>
+                  <input type="hidden" name="question_id" value="${stepOptionTitle.question_id}">
+              </tr>
+          `;
+          // Yeni satırı tablonun sonuna ekle
+          $('#step-option-titles').append(newRow);
+         
+      })
+      .catch((error) => {
+          console.error('Error:', error);
+      });
+});
+
+
+
+</script>
+
+
 
 {{-- Linkleri aktif yapma --}}
 <script>

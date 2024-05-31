@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Backend\TeacherSkilService;
 use App\Services\Backend\TeacherToLessonAndClassService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TeacherSkilController extends Controller 
 {
@@ -22,7 +23,7 @@ class TeacherSkilController extends Controller
     public function lessonToClassesAjax(Request $request)
     {
         //dd($request);
-        $id=1;
+        $id = Auth::user()->id;
         $html='';
         $teacherToClass=$this->teacherToLessonAndClassService->getWithWhereClass(['user_id'=>$id]);
         //dd($teacherToClass);

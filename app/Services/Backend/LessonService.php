@@ -77,7 +77,7 @@ class LessonService{
                     $query->where($column, $value);
                 }
             }
-            return $query->orderByDesc('id')->withTrashed()->get();
+            return $query->orderBy('id')->withTrashed()->get();
          }
          public function getWithWhereOnlyTrashed(array $where = [])
         {

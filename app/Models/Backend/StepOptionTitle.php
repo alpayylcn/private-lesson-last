@@ -17,6 +17,7 @@ class StepOptionTitle extends Model
     ];
     protected $fillable = [
         'question_id',
+        'option_id',
         'title',
         'teacher_title',
                

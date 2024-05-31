@@ -23,13 +23,13 @@ class TeacherGeneralService{
         protected UserDetailService $userDetailService,
         
 
-        
+         
         ){}   
        
     public function general(){
         
         $id=Auth::user()->id;
-         
+        
         if (!empty ($id)){
         $lessons=$this->lessonService->getWithWhere();  
         $classes=$this->classService->getWithWhere(); 
@@ -50,7 +50,7 @@ class TeacherGeneralService{
        
         
     }
-    public function updateTeacherDetails(array $teacherProfileData,int $id=1){
+    public function updateTeacherDetails(array $teacherProfileData,int $id=0){
         //dd($teacherProfileData,$teacherProfileData['lesson_id'],$teacherProfileData['class_id']);
         //Sınıflar ve dersler kaydediliyor.
         foreach($teacherProfileData['lesson_id'] as $lesson){ 
@@ -66,8 +66,8 @@ class TeacherGeneralService{
         $teachersDetail=$this->teacherDetailService->update($teacherProfileData,$id);
     }
 
-    public function updateTeacherLessonClassLocation(array $teacherProfileData,int $id=1){
-        //dd($teacherProfileData['class_id']);
+    public function updateTeacherLessonClassLocation(array $teacherProfileData,int $id=0){
+        //dd($teacherProfileData['location_id']);
         //Sınıflar ve dersler kaydediliyor.
         $deleteTeacherLocation=$this->teacherToLessonAndClassService->deleteAll($id);
         $lessonPriceVisible=$this->teacherToLessonPriceService->updateVisible(['visible'=>0],$id);
@@ -92,7 +92,7 @@ class TeacherGeneralService{
         }
         return [$lessonToClass,$teacherLocation];
     }
-    public function updateTeacherProfile(array $teacherProfileData,int $id=1){
+    public function updateTeacherProfile(array $teacherProfileData,int $id=0){
 
     //dd($teacherProfileData);
         $this->teacherProfileService->update($teacherProfileData,$id);

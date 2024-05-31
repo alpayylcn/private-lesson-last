@@ -21,7 +21,7 @@ class StepQuestionController extends Controller
     {   
         
         $optionAdd=StepOptionTitle::create($request->except('_token','user_id'));
-       
+            $optionAdd->update(['option_id'=>$optionAdd->id]); //tabloya create işlemi yapılınca option_id sütununa id bilgisini ekliyoruz
         if(!empty($optionAdd)){
             toastr()->success('Ekleme İşlemi Başarılı', 'Başarılı', ["positionClass" => "toast-top-right"]);
             return response()->json($optionAdd, 201);
@@ -54,13 +54,13 @@ class StepQuestionController extends Controller
 
     public function filterOptionsUpdate(Request $request)
     { 
-       dd($request);
-            foreach($request->title as $key => $title)
+      // dd($request);
+            foreach($request->option_title as $key => $title)
                 {
                    $updateOption=StepOptionTitle::where('id', $key)->update([
                     'question_id'=>$request->question_id,
                     'title'=>$title,
-                    'teacher_title'=>$request->teacher_title[$key],
+                    'teacher_title'=>$request->option_teacher_title[$key],
                     ]);   
                 }
             if(!empty($updateOption)){

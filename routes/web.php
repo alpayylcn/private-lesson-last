@@ -76,12 +76,14 @@ Route::resources([
     
     
 ]);
-Route::middleware('auth')->group(function () {
 
+
+Route::post('all_step_filter_end',[FilterStudentSearchTeacherController::class,'searchEnd'])->name('all_step_filter.searchEnd');
 Route::post('all_step_filter_create',[FilterStudentSearchTeacherController::class,'stepCreate'])->name('all_step_filter.stepCreate');
 Route::post('all_step_filter_update',[FilterStudentSearchTeacherController::class,'stepUpdate'])->name('all_step_filter.stepUpdate');
 Route::resource('all_step_filter',FilterStudentSearchTeacherController::class,['names' => ['index'=>'all_step_filter']]);
 
+Route::middleware('auth')->group(function () {
 //User Detail Route Start
 Route::get('users_profile',[UserDetailController::class,'UserEditProfile'])->name('users_profile.index');
 Route::post('users_detail_update',[UserDetailController::class,'UserDetailUpdate'])->name('users_detail.update');
@@ -113,6 +115,7 @@ Route::post('teacher_lesson_to_class',[TeacherSkilController::class,'lessonToCla
 //Teacher Lesson To Price Route Start
 Route::get('teachers_profile_lesson_price',[TeacherToLessonPriceController::class,'lessonPrice'])->name('teachers_profile.lessonPrice');
 Route::post('teacher_to_lesson_price_update',[TeacherToLessonPriceController::class,'lessonToPriceUpdate'])->name('teacher_to_lesson_price.lessonToPriceUpdate');
+Route::post('teachers_profile_update_lessons',[TeacherDetailsController::class,'updateLessonClassLocation'])->name('teachers_profile.updateLessonClassLocation');
 //Teacher Lesson To Price Route End
 });
 
@@ -123,7 +126,7 @@ Route::post('add_lessons_store',[LessonController::class,'store'])->name('lesson
 Route::post('delete_lessons',[LessonController::class,'deleteLessons'])->name('lessons.deleteLessons');
 Route::post('restore_lessons',[LessonController::class,'restoreLessons'])->name('lessons.restoreLessons');
 Route::post('force_delete_lessons',[LessonController::class,'forceDeleteLessons'])->name('lessons.forceDeleteLessons');
-Route::post('teachers_profile_update_lessons',[TeacherDetailsController::class,'updateLessonClassLocation'])->name('teachers_profile.updateLessonClassLocation');
+
 //Lessons Route Section End
 
 //Classes Route Section Start

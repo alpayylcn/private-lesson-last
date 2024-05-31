@@ -27,27 +27,33 @@
 @endpush
 
 @section('js')
-   
+   js kodlar
 @endsection
 @section('content')
   <div class="container-xxl">
    <div class="authentication-wrapper authentication-basic container-p-y">
             <div class="authentication-inner">
-              
+              @if (!empty ($createId) )
+              <form action="{{route('all_step_filter.stepUpdate')}}" method="POST"> 
+              @else
               <form action="{{route('all_step_filter.stepCreate')}}" method="POST"> 
-              @csrf  
+              @endif
+              
+                  @csrf  
                  
                       <div class="card border-success" >
                         <div class="text-center mt-4"><h5 style="text-transform:uppercase">Özel Ders Ara</h5></div>
-                        <div class="mb-3">
-                          <div class="bg-white border m-2 rounded text-center ">
-                          @if(!empty($stepCount))
-                          <b>ADIM {{$stepNumber->rank}} / {{$stepCount->count()}}</b>
-                          @endif
-                          </div>
+                        <div class="progress mb-3">
+                          <div
+                            class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                            role="progressbar"
+                            style="width: 12%"
+                            aria-valuenow="20"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                          >12%</div>
                         </div>
                         @if(!empty ($stepNumber))
-                       
                         <input type="hidden" name="question_id" value="{{$stepNumber->id}}">
                         <input type="hidden" name="question_rank" value="{{$stepNumber->rank}}">
                             @if(!empty ($createId))
@@ -57,16 +63,15 @@
                           <div class="checkboxcontrol1 btn-group-vertical m-4" role="group" aria-label="Basic radio toggle button group" required>
                             @if($stepOption)
                               @foreach ($stepOption as $option) 
-                              
                                   @if (!empty($option->classes))
                                 
                                   <input type="radio" class="btn-check" value="{{$option->classes->id}}" name="option_value" id="btnradio{{$option->classes->id}}" required>
                                   <label class="btn btn-outline-info mt-2" for="btnradio{{$option->classes->id}}">{{$option->classes->title}} </label>
                                  
-                                  @else
+                                  @elseif(!empty ($option->multiOption($option->model_type, $option->option_id)))
                                  
-                                  <input type="radio" class="btn-check" value="{{$option->id}}" name="option_value" id="btnradio{{$option->id}}" required>
-                                  <label class="btn btn-outline-info mt-2" for="btnradio{{$option->id}}">{{$option->title}} </label>
+                                  <input type="radio" class="btn-check" value="{{$option->option_id}}" name="option_value" id="btnradio{{$option->option_id}}" required>
+                                  <label class="btn btn-outline-info mt-2" for="btnradio{{$option->option_id}}">{{$option->multiOption($option->model_type, $option->option_id)->title}} </label>
                                   @endif
                               @endforeach
                             @endif

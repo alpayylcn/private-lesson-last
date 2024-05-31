@@ -2,6 +2,7 @@
 
 namespace App\Models\Backend;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -28,8 +29,9 @@ class TeacherToLessonAndClass extends Model
     ];
     public function user() :HasOne
     {
-        return $this->hasOne(Lesson::class,'id','user_id');
+        return $this->hasOne(User::class,'id','user_id');
     } 
+    
     public function lesson() :HasOne
     {
         return $this->hasOne(Lesson::class,'id','lesson_id');

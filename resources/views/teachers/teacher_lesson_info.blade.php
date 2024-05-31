@@ -21,8 +21,8 @@
 
 <div class="row">
   <form method="POST" action="{{route('teachers_profile.updateLessonClassLocation')}}" enctype="multipart/form-data">
-    @csrf 
-    <input type="hidden" name="user_id" value="1">
+    @csrf  
+    <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
   <div class="col-md-12">
     <ul class="nav nav-pills flex-column flex-md-row mb-3">
       <li class="nav-item">

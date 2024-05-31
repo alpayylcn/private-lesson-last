@@ -10,6 +10,7 @@ use App\Services\Backend\TeacherGeneralService;
 use App\Services\Backend\TeacherToLessonAndClassService;
 use App\Services\Backend\TeacherToLessonPriceService;
 use App\Services\Backend\TeacherToLocationService;
+use Illuminate\Support\Facades\Auth;
 
 class TeacherToLessonPriceController extends Controller
 {
@@ -31,7 +32,7 @@ class TeacherToLessonPriceController extends Controller
     } 
     public function lessonToPriceUpdate(Request $request)
     {
-        $id=1;
+        $id = Auth::user()->id;;
         $data= $this->teacherToLessonPriceService->updateTeacherLessonPrice($request->all(),$id);
         if(!empty($data)){
             toastr()->success('Güncelleme İşlemi Başarılı', 'Başarılı', ["positionClass" => "toast-top-right"]);

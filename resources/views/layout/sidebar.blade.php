@@ -151,7 +151,12 @@
           <div data-i18n="Boxicons">Ders Arama Adımları</div>
         </a>
       </li>
-     
+      <li class="menu-item">
+        <a href="{{route('all_step_filter')}}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-detail text-warning"></i>
+          <div data-i18n="Basic" class="text-warning">Ders Arama Adımları (Önizleme)</div>
+        </a>
+      </li>
       <!-- Öğretmenler -->
       <li class="menu-header small text-uppercase"><span class="menu-header-text">Öğretmenler</span></li>
       <li class="menu-item">

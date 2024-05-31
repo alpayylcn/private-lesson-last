@@ -100,7 +100,7 @@ class TeacherDetailsController extends Controller
      */
     public function update(Request $request)
     {
-       $id=1;
+        $id=Auth::user()->id;
         $data=$this->teacherGeneralService->updateTeacherDetails($request->all(),$id);
         //return view('teachers.teacher_profile',compact('data'));
  
@@ -108,7 +108,7 @@ class TeacherDetailsController extends Controller
 
     public function updateProfile(Request $request) : void
     {
-       $id=1;
+        $id=Auth::user()->id;
         $data=$this->teacherGeneralService->updateTeacherProfile($request->all(),$id);
         //return view('teachers.teacher_profile',compact('data'));
 
@@ -116,7 +116,7 @@ class TeacherDetailsController extends Controller
     public function updateLessonClassLocation(Request $request)
     {
         //dd($request);
-       $id=1;
+        $id=Auth::user()->id; 
         $data=$this->teacherGeneralService->updateTeacherLessonClassLocation($request->all(),$id);
         
         //return view('teachers.teacher_profile',compact('data'));

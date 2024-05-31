@@ -27,7 +27,7 @@
 @endpush
 
 @section('js')
-   js kodlar
+   
 @endsection
 @section('content')
 <div class="album py-5">
@@ -35,85 +35,33 @@
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
       
-
-    
-
-      <div class="col-md-12 col-xl-12">
-        <div class="card shadow-none bg-transparent border border-warning mb-3">
-          <div class="card-body">
-            <h5 class="card-title"></h5>
-            <div class="col-lg-12 mb-4 mb-xl-0">
-              <small class="text-light fw-semibold">Sorgu Özeti</small>
-              <div class="demo-inline-spacing mt-3">
-                <div class="list-group list-group-flush">
-                  <a style="text-transform:capitalize" class="list-group-item list-group-item-action"
-                    ><b>Ders :</b> {{$studentFilters->lesson->title}}</a
-                  ><a style="text-transform:capitalize" class="list-group-item list-group-item-action"
-                    ><b>Sınıf :</b> {{$studentFilters->classes->title}}</a
-                  >
-                  <a style="text-transform:capitalize"  class="list-group-item list-group-item-action"
-                    ><b>Dersin Yapılacağı Yer :</b>  {{$studentFilters->filter_lesson_location->title}}</a
-                  >
-                  <a  style="text-transform:capitalize" class="list-group-item list-group-item-action"
-                    ><b>Ders Kimin İçin :</b>  {{$studentFilters->filter_who->title}}</a
-                  >
-                  <a style="text-transform:capitalize" class="list-group-item list-group-item-action"
-                    ><b>Haftada Kaç Kez :</b>  {{$studentFilters->filter_week_time->title}}</a
-                  >
-                  <a style="text-transform:capitalize" class="list-group-item list-group-item-action"
-                    ><b>Ne Zamana Kadar :</b>  {{$studentFilters->filter_lesson_time_period->title}} </a
-                  >
-                  <a style="text-transform:capitalize" class="list-group-item list-group-item-action"
-                    ><b>Ne Zaman Başlayacak :</b>  {{$studentFilters->filter_lesson_start_time->title}} </a
-                  >
-                </div>
-              </div>
-            </div>
-            <p class="card-text"></p>
-          </div>
-        </div>
-      </div>
-      
-
-
-
-
-      
-      @foreach ($teachersData as $teacherData)
-
-    {{-- <form action="{{route('dersaraend')}}"  method="POST">  --}}
-        @csrf
-
-        {{-- <input type="text" style="display: none" name="pivot_id" value="{{$pivot_id}}"> --}}
-
-      <div class="col-md">
-        <div style="border: 2px solid" class="card mb-3">
+@forelse ($teachersData as $teacherData)
+  <form action="{{route('all_step_filter.searchEnd')}}"  method="POST"> 
+  @csrf
+<div class="col-md">
+        <div style="border: 2px solid" class="card mb-3"> 
           <div class="row g-0">
             <div class="col-md-5">
-              <img class="card-img card-img-left p-1" src="{{asset('backend/assets')}}/img/avatars/teachers_avatar_male.jpg" alt="Card image" />
+              <img class="card-img card-img-left p-1" src="{{asset('backend/assets')}}/img/profileimages/{{ $teacherData->user->userDetails->profile_image ?: '/no_image.jpg' }}" alt="Card image" />
               
             </div> 
             
             <div class="col-md-7">
               <div class="card-body">
-                <h6 class="card-title">{{$teacherData->teacher_name}} - {{$teacherData->lesson->title}}</h6> 
+                <h6 class="card-title">{{$teacherData->user->name}} {{$teacherData->user->surname}} - {{$teacherData->lesson->title}}</h6> 
                 
                 <p class="card-text">
                   15 Yıllık tecrücesi ile derslerinizde başarılı olmak için randevu alın.
                 
                 </p>
-                {{-- <p class="card-text"><small class="text-muted">{{$teacher_data->teacher_image}}</small></p> --}}
                 
               </div>
-              {{-- <input type="text" style="display: none" name="teachers_name_surname" value="{{$teacher_data->user->name}} {{$teacher_data->user->surname}}"> --}}
-              {{-- <input type="text" style="display: none" name="teachers_email" value="{{$teacher_data->user->surname}}"> --}}
-              {{-- <button type="submit" class="btn btn-outline-primary m-2">RANDEVU AL</button> --}}
-            </div>
+              </div>
           </div>
           <hr style="border: 2px solid">
           <div class="row g-0">
             <div class="p-2 col-md-6">
-          <button type="submit" class="btn btn-outline-primary">ÖĞRETMENDEN RANDEVU AL</button></div>
+          <button type="submit"  class="btn btn-outline-primary">ÖĞRETMENDEN RANDEVU AL</button></div>
           <div class="p-2 col-md-6">
           <button type="submit" class="btn btn-outline-danger">ÖĞRETMEN PROFİLİNİ GÖR</button></div>
           </div>
@@ -121,17 +69,89 @@
         
       </div>
     </form>
-      @endforeach
-      
-      
-
-      
+@empty
+<div  class="card mb-3">
+ <p class="m-3">Aradığınız kriterlere uygun öğretmen bulunamadı...</p> 
+</div>
+@endforelse
+   
     </div>
+ </div>
+</div>
 
 
-    
+<!-- Modal -->
+<div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+
+     <form action="" method="POST"> 
+      @csrf
+
+      <input type="text" style="display: none" name="pivot_id" value="">
+
+        <h5 style="text-transform:capitalize" class="modal-title" id="modalCenterTitle">Özel Ders Ara</h5>
+      </div>
+      <div class="modal-body">
+        
+        
+        <input  type="text" name="lesson_dt" id="lesson_dt" value=""/>
+      
+
+
+      
+        <div class="row">
+          <div class="col-lg-12 mb-3">
+            <label for="nameWithTitle" class="form-label">Adınız Soyadınız</label>
+            <input
+              type="text"
+              id="student_name"
+              class="form-control"
+              name="student_name"
+              placeholder="Adınızı ve Soyadınızı Yazınız"
+              required
+            />
+          </div>
+          <div class="col-lg-12 mb-3">
+            <label  class="form-label">Telefon Numaranız</label>
+            <input
+              type="text"
+              id="student_phone"
+              class="form-control"
+              name="student_phone"
+              placeholder="Telefon Numaranızı Yazınız"
+              required
+            />
+          </div>
+          
+        </div>
+        
+          <div class="col-lg-12 mb-0">
+            <label  class="form-label">Öğretmenin Bilmesi Gerekenler</label>
+            <textarea
+              rows="5"
+              id="teachers_note"
+              class="form-control"
+              placeholder="Son olarak öğretmenin bilmesi gerekenler varsa ekleyiniz."
+              name="teachers_note"
+              
+            ></textarea>
+          </div>
+                      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          Kapat
+        </button>
+        <button type="submit" class="btn btn-info">GÖNDER</button>
+        </div>
+      </form> 
+    </div>
   </div>
 </div>
+
+
  @endsection
 
   

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Classes;
 use App\Services\Backend\ClassService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\Classes\ClassAddRequest;
+use App\Models\Backend\StepOptionTitle;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -50,6 +51,8 @@ class ClassController extends Controller
     {
         //dd($request);
         $store=$this->classService->create($request->all());
+         //Sınıf adı step_option_titles tablosuna da ekleniyor
+         $classToOptionAdd=StepOptionTitle::create(['question_id'=>2,'option_id'=>$store->id,'title'=>$request->title,]);
         if(!empty ($store)){
             toastr()->success('Sınıf Ekleme İşlemi Başarılı', 'Başarılı', ["positionClass" => "toast-top-right"]);
             return redirect()->back();   
@@ -82,6 +85,9 @@ class ClassController extends Controller
             $class_id=$request->id;
         }
         $data=$this->classService->forceDeleteClasses($class_id);
+
+        //Sınıf adı step_option_titles tablosundan da siliniyor
+       $classToOptionDelete=StepOptionTitle::where('option_id',$class_id)->where('question_id',2)->delete();
         //dd($data);
         if($data>0 && $data!='true'){
             toastr()->warning('Kullanımda olan ders/dersler silinemedi', 'Silinemeyen Dersler', ["positionClass" => "toast-top-right"]);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Lessons;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\Lessons\LessonAddRequest;
 use App\Models\Backend\Lesson;
+use App\Models\Backend\StepOptionTitle;
 use App\Models\Backend\TeacherToLessonAndClass;
 use App\Models\User;
 use App\Services\Backend\LessonService;
@@ -48,8 +49,13 @@ class LessonController extends Controller
     }
 
     public function store(LessonAddRequest $request)
-    {
+    { //dd($request);
         $store=$this->lessonService->create($request->all());
+
+        //Ders adı step_option_titles tablosuna da ekleniyor
+        $lessonToOptionAdd=StepOptionTitle::create(['question_id'=>1,'option_id'=>$store->id,'title'=>$request->title,]);
+       
+   
         if (!empty($store)) {
             toastr()->success('Ders Ekleme İşlemi Başarılı', 'Başarılı', ["positionClass" => "toast-top-right"]);
             return redirect()->back();   
@@ -81,6 +87,8 @@ public function restoreLessons(Request $request)
             $lesson_id=$request->id;
         }
         $data=$this->lessonService->forceDeleteLessons($lesson_id);
+       //Ders adı step_option_titles tablosundan da siliniyor
+       $lessonToOptionDelete=StepOptionTitle::where('option_id',$lesson_id)->where('question_id',1)->delete();
         //dd($data);
         if($data>0 && $data!='true'){
             toastr()->warning('Kullanımda olan ders/dersler silinemedi', 'Silinemeyen Dersler', ["positionClass" => "toast-top-right"]);
