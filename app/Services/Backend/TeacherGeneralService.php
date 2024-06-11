@@ -26,7 +26,7 @@ class TeacherGeneralService{
          
         ){}   
        
-    public function general(){
+    public function general(){ 
         
         $id=Auth::user()->id;
         

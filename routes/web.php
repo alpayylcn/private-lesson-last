@@ -28,8 +28,10 @@ use App\Http\Controllers\Backend\WalletSpentMoneyController;
 use App\Http\Controllers\Backend\WalletTransactionController;
 use App\Http\Controllers\Backend\WalletTransactionTypeController;
 use App\Http\Controllers\Backend\Admin\AdminController;
+use App\Http\Controllers\Backend\Teacher\TeacherAppointmentListController;
 use App\Http\Controllers\StepQuestionController;
 use App\Http\Controllers\UserDetailController;
+use App\Models\Backend\TeacherAppointmentList;
 use Illuminate\Support\Facades\Route;
 
 
@@ -77,11 +79,15 @@ Route::resources([
     
 ]);
 
-
+// student "teacher search" filter
 Route::post('all_step_filter_end',[FilterStudentSearchTeacherController::class,'searchEnd'])->name('all_step_filter.searchEnd');
 Route::post('all_step_filter_create',[FilterStudentSearchTeacherController::class,'stepCreate'])->name('all_step_filter.stepCreate');
 Route::post('all_step_filter_update',[FilterStudentSearchTeacherController::class,'stepUpdate'])->name('all_step_filter.stepUpdate');
 Route::resource('all_step_filter',FilterStudentSearchTeacherController::class,['names' => ['index'=>'all_step_filter']]);
+
+// unregistered student create ->student "teacher search" filter
+Route::get('all_step_filter_contact_form/{param}',[UnregisteredStudentController::class,'contactForm'])->name('all_step_filter.contactForm');
+Route::post('all_step_filter_contact_form_create',[UnregisteredStudentController::class,'contactFormCreate'])->name('all_step_filter.contactFormCreate');
 
 Route::middleware('auth')->group(function () {
 //User Detail Route Start
@@ -117,6 +123,12 @@ Route::get('teachers_profile_lesson_price',[TeacherToLessonPriceController::clas
 Route::post('teacher_to_lesson_price_update',[TeacherToLessonPriceController::class,'lessonToPriceUpdate'])->name('teacher_to_lesson_price.lessonToPriceUpdate');
 Route::post('teachers_profile_update_lessons',[TeacherDetailsController::class,'updateLessonClassLocation'])->name('teachers_profile.updateLessonClassLocation');
 //Teacher Lesson To Price Route End
+
+//Teacher Appointments
+Route::get('appointment_from_student',[TeacherAppointmentListController::class,'index'])->name('teachers_profile.appointment_from_student');
+
+
+
 });
 
 Route::middleware('role:Super-Admin')->group(function () { 

@@ -34,18 +34,23 @@
   <div class="container">
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-      
-@forelse ($teachersData as $teacherData)
+    {{-- @dd($teacherListData['teachersData'])   --}}
+    
+@forelse ($teacherListData['teachersData'] as $teacherData)
+
   <form action="{{route('all_step_filter.searchEnd')}}"  method="POST"> 
   @csrf
 <div class="col-md">
         <div style="border: 2px solid" class="card mb-3"> 
           <div class="row g-0">
             <div class="col-md-5">
+              @if (!empty($teacherData->user->userDetails))
               <img class="card-img card-img-left p-1" src="{{asset('backend/assets')}}/img/profileimages/{{ $teacherData->user->userDetails->profile_image ?: '/no_image.jpg' }}" alt="Card image" />
+              @endif
+             
               
             </div> 
-            
+             
             <div class="col-md-7">
               <div class="card-body">
                 <h6 class="card-title">{{$teacherData->user->name}} {{$teacherData->user->surname}} - {{$teacherData->lesson->title}}</h6> 
@@ -61,7 +66,9 @@
           <hr style="border: 2px solid">
           <div class="row g-0">
             <div class="p-2 col-md-6">
-          <button type="submit"  class="btn btn-outline-primary">ÖĞRETMENDEN RANDEVU AL</button></div>
+              <input type="hidden" name="select_teacher_id" value="{{$teacherData->user->id}}">
+              
+          <button type="submit"  class="btn btn-outline-primary">ÖĞRETMENDEN RANDEVU AL </button></div>
           <div class="p-2 col-md-6">
           <button type="submit" class="btn btn-outline-danger">ÖĞRETMEN PROFİLİNİ GÖR</button></div>
           </div>

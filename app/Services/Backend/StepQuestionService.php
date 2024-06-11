@@ -8,7 +8,7 @@ class StepQuestionService{
     public function __construct(protected StepQuestion $stepQuestion){}
        
     public function create(array $stepQuestionData){
-
+       
         return $this->stepQuestion->create($stepQuestionData);
         
     }
@@ -42,9 +42,13 @@ class StepQuestionService{
                $query->where($column, $value);
            }
        }
-       return $query->orderByDesc('id')->get();
+       return $query->orderByDesc('rank')->get();
     }
 
+    public function lastRank(){
+        $lastRank = StepQuestion::max('rank');
+        return $lastRank;
+    }
     public function first(array $where)
    {
          // Veritabanı sorgusu oluştur

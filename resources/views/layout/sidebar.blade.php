@@ -88,6 +88,25 @@
       <li class="menu-header small text-uppercase">
         <span class="menu-header-text">ÖĞRETMEN</span>
       </li>
+      <li class="menu-item">
+        <a href="" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons bx bx-dock-top"></i>
+          <div data-i18n="Account Settings">Ders İstekleri</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item">
+            <a href="{{route('teachers_profile.appointment_from_student')}}" class="menu-link">
+              <div data-i18n="Account">Öğrenciden Gelen</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="#" class="menu-link">
+              <div data-i18n="Notifications">Adminden Gelen</div>
+            </a>
+          </li>
+          
+        </ul>
+      </li>
       @endrole
       @role('Student')
       <li class="menu-header small text-uppercase">

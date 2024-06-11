@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('surname',255)->nullable()->comment("Kayıtsız Öğrencinin soyadı");
             $table->string('mail',255)->nullable()->comment("Kayıtsız Öğrencinin mail adresi");
             $table->string('phone')->nullable()->comment("Kayıtsız Öğrencinin telefon numarası");
+            $table->string('student_ip')->nullable()->comment("Kayıtsız Öğrencinin giriş ip si");
+            $table->string('session_id')->nullable()->comment("Kayıtsız Öğrencinin session id si");
             
             $table->timestamps();
             $table->softDeletes()->comment("Çöp Kutusu");

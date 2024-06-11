@@ -5,11 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdateStepOptionTitleRequest;
 use App\Models\Backend\StepOptionTitle;
 use App\Models\Backend\StepQuestion;
+use App\Services\Backend\StepQuestionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class StepQuestionController extends Controller
-{
+{ public function __construct(
+   
+    protected StepQuestionService $stepQuestionService, 
+    
+    ){}
     public function index()
     {
         $userId=Auth::user()->id;
@@ -19,7 +24,6 @@ class StepQuestionController extends Controller
 
     public function filterOptionsAdd(UpdateStepOptionTitleRequest $request)
     {   
-        
         $optionAdd=StepOptionTitle::create($request->except('_token','user_id'));
             $optionAdd->update(['option_id'=>$optionAdd->id]); //tabloya create işlemi yapılınca option_id sütununa id bilgisini ekliyoruz
         if(!empty($optionAdd)){

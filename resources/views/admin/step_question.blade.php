@@ -89,7 +89,7 @@
     
           <div class="col-md-4">
             <div class="card mb-4">
-              <h5 class="card-header">YENİ BAŞLIK EKLEME </small></h5>
+              <h5 class="card-header">YENİ SORU EKLEME </small></h5>
                 <div class="card-body mb-3">
                   
                   <div id="defaultFormControlHelp" class="form-text mb-1">

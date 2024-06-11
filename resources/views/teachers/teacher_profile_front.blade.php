@@ -64,7 +64,7 @@
           <div  class="card mb-3">
             <div class="row g-0">
               <div class="col-md-3">
-                <img class="card-img card-img p-1" src="{{asset('backend/assets')}}/img/avatars/teachers_avatar_male.jpg" alt="Card image" />
+                <img class="card-img card-img p-1" src="{{asset('backend/assets')}}/img/profileimages/{{ Auth::user()->userDetails->profile_image ?: '/no_image.jpg' }}" alt="Card image" />
                 <div class="col-md-12 mb-3 d-flex justify-content-center">
                   <button  disabled class="btn btn-outline-secondary m-2 p btn-sm">YÜZYÜZE</button>
                   <button  disabled class="btn btn-outline-secondary m-2 p btn-sm">ONLINE</button>
@@ -72,11 +72,11 @@
               </div> 
                 <div class="col-md-7">
                   <div class="card-body">
-                    <h5 class="card-title">{{$data['teacherData']->name}} {{$data['teacherData']->surname}} </h5> 
+                    <h5 class="card-title">{{Auth::user()->name}} {{Auth::user()->surname}} </h5> 
                     <p class="card-text">
                       Matematik derslerinizde başarılı olmak mı istiyorsun? 15 Yıllık tecrübe sahibi Yeni nesil sorular konusunda uzman bir öğretmenim. 
                     </p>
-                    <p><i class="bx bx-map me-1"></i><b>{{$data['teacherData']->city}} / {{$data['teacherData']->county}}</b></p>
+                    <p><i class="bx bx-map me-1"></i><b>{{$data['teacherData']?->city}} / {{$data['teacherData']?->county}}</b></p>
                     <p class="text-success"><i class="bx bx-award me-1"></i><b>10 Yıllık Tecrübe</b></p>
                     <p class="text-primary"><i class="bx bx-arch me-1"></i><b>Marmara Üniversitesi / Fen Edebiyat Fakültesi</b></p>
                   </div>

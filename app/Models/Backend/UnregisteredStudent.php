@@ -21,6 +21,13 @@ class UnregisteredStudent extends Model
     protected $fillable = [
         'name',
         'surname',     
-        'mail'        
+        'mail' ,
+        'phone',
+        'student_ip',
+        'session_id'       
     ];
+    public function setPhoneAttribute($value)
+    {
+        $this->attributes['phone'] = preg_replace('/\D/', '', $value);
+    }
 }

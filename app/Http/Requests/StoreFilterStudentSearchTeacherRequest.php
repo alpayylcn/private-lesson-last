@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Backend\StepQuestion;
+namespace App\Http\Requests;
 
-use App\Http\Requests\Traits\ValidateUserTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StepQuestionAddRequest extends FormRequest
+class StoreFilterStudentSearchTeacherRequest extends FormRequest
 {
-    use ValidateUserTrait;
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
         return true;
@@ -21,22 +22,22 @@ class StepQuestionAddRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-           'title'=>[
+            
+            'option_value' =>[
                 'required',
-             ]
+            ],
+            
             
         ];
-        return array_merge($this->addUserRules(),$rules); 
+        return $rules;
     }
 
     public function messages()
     {
-        return array_merge(parent::messages(),$this->customMessages(),
+        return 
         [
+            'option_value.required' => 'Lütfen Bir Seçim Yapınız...',
             
-            'title.required' => 'Soru alanı boş olamaz...',
-            
-           
-        ]);
+        ];
     }
 }

@@ -1,14 +1,18 @@
 <?php
 namespace App\Services\Backend;
 use App\Models\Backend\UnregisteredStudent;
+use App\Support\Helper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session as FacadesSession;
 
 class UnregisteredStudentService{
 
     public function __construct(protected UnregisteredStudent $unregisteredStudent){} 
     public function create(array $unregisteredStudentData){
-
-        return $this->unregisteredStudent->create($unregisteredStudentData);
+        //session ve ip verilerini create edilecek dataya ekliyoruz.
+        $unregisteredStudentData['session_id'] = session()->getId();
+        $unregisteredStudentData['student_ip'] = Helper::getIp();
+       return $this->unregisteredStudent->create($unregisteredStudentData);
         
     }
 

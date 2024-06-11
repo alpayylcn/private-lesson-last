@@ -37,7 +37,7 @@ class TeacherDetailsController extends Controller
     public function info(){
         $data=$this->teacherGeneralService->general();
         
-        return view('teachers.teacher_profile_info',compact('data'));
+        return view('teachers.teacher_profile_info',compact('data')); 
     } 
     
     public function front(){

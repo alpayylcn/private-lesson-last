@@ -10,6 +10,7 @@ use App\Models\Backend\StepQuestion;
 use App\Services\Backend\ClassService;
 use App\Services\Backend\LessonService;
 use App\Services\Backend\StepOptionService;
+use App\Services\Backend\StepOptionTitleService;
 use App\Services\Backend\StepQuestionService;
 use App\Services\Backend\TeacherGeneralService;
 use Egulias\EmailValidator\Result\Reason\EmptyReason;
@@ -22,6 +23,7 @@ class AdminController extends Controller
         
         protected TeacherGeneralService $teacherGeneralService,
         protected StepOptionService $stepOptionService,
+        protected StepOptionTitleService $stepOptionTitleService,
         protected StepQuestionService $stepQuestionService,
         protected LessonService $lessonService,
         protected ClassService $classService,
@@ -53,7 +55,7 @@ class AdminController extends Controller
     
     public function filterItems()
     {   
-        $userId=Auth::user()->id;
+        $userId=auth()->user()->id;
         
         $data=$this->stepQuestionService->getWithWhere();
         $stepCount=$this->stepQuestionService->getWithWhere();
@@ -75,7 +77,7 @@ class AdminController extends Controller
     }
     public function filterItemsOptions()
     {   
-        $userId=Auth::user()->id;
+        $userId=auth()->user()->id;
         
         $data=$this->stepQuestionService->getWithWhere();
         //dd($data->title);
@@ -83,26 +85,31 @@ class AdminController extends Controller
         
     }
     public function filterItemsAdd(StepQuestionAddRequest $request)
-    {   
-       //dd('soru ekleme',$request);
-        $userId=Auth::user()->id;
-       
-        $questionAdd=$this->stepQuestionService->create($request->except('_token'));
-       // dd($questionAdd->id);
-        
-        if(!empty($questionAdd)){
-            $stepOptionsTitle=StepOptionTitle::create(['question_id'=>$questionAdd->id]);
-           $data=$this->stepQuestionService->getWithWhere();
-        //dd($data->title);
-        toastr()->success('Ekleme İşlemi Başarılı', 'Başarılı', ["positionClass" => "toast-top-right"]);
-        return back();  
+    {
+        $userId = auth()->user()->id; // test et sil
+        $lastRank = $this->stepQuestionService->lastRank(); //en büyük rank değerini alıyor(Son Soru)
+        //son soru her zaman iletişim türü olsun istediğimiz için rank değerini bir arttırıyoruz ve satırı güncelliyoruz.
+        $updateData = $this->stepQuestionService->first(['rank' => $lastRank]);
+        $updateData->update(['rank' => $lastRank + 1]);
+        if (!empty($updateData)) {
+            $questionAdd = $this->stepQuestionService->create(['title' => $request->title, 'rank' => $lastRank]); //yeni satır ekleniyor
+        }
+
+        if (!empty($questionAdd)) {
+            $stepOptionsTitle = $this->stepOptionTitleService->create(['question_id' => $questionAdd->id]);
+            $data = $this->stepQuestionService->getWithWhere();//test et sil 
+            toastr()->success('Ekleme İşlemi Başarılı', 'Başarılı', ["positionClass" => "toast-top-right"]);
+            return back();
+        }else{
+            toastr()->warning('Ekleme İşlemi Başarsız', 'Başarısız', ["positionClass" => "toast-top-right"]);
+            return back();
         }
        
         
     }
     public function filterItemsUpdate(StepQuestionRequest $request)
-    {//dd($request);
-        $userId=Auth::user()->id;
+    {
+        $userId=auth()->user()->id;
         foreach ($request->rank as $id => $rank) 
         {
            
@@ -119,58 +126,48 @@ class AdminController extends Controller
         
     }
     public function filterItemsDelete(Request $request)
-    {   
-        if(!empty($request->id))
-        {
-            $data=$this->stepQuestionService->delete($request->id);
-                if (!empty ($data)){
-                    $optionDelete=StepOptionTitle::where('question_id',$request->id)->delete();
-                    return redirect()->back();
-                }
+    {
+        if (!empty($request->id)) {
+            $lastRank = $this->stepQuestionService->lastRank(); //en büyük rank değerini alıyor(Son Soru) sildikten sonra
+            $updateData = $this->stepQuestionService->first(['rank' => $lastRank]);
+            $data = $this->stepQuestionService->delete($request->id);
+            if (!empty($data)) {
+                $updateData->update(['rank' => $lastRank - 1]);
+                $optionDelete=$this->stepOptionTitleService->deleteByQuestionId($request->id);
+                return redirect()->back();
+            }
         }
        
         
     }
     public function create()
     {
-        //
+        
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+       
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
+       
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    
     public function edit(string $id)
     {
-        //
+       
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(Request $request, string $id)
     {
-        //
+       
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+  
     public function destroy(string $id)
     {
         //

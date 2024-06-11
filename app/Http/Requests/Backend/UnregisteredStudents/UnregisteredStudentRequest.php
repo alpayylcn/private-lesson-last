@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Backend\UserDetails;
+namespace App\Http\Requests\Backend\UnregisteredStudents;
 
 use App\Http\Requests\Traits\ValidateUserTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserDetailRequest extends FormRequest
+class UnregisteredStudentRequest extends FormRequest
 {   
     use ValidateUserTrait;
     public function authorize(): bool
@@ -21,7 +21,7 @@ class UserDetailRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'profile_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // 2MB = 2048KB
+            
             'name' =>[
                 'required',
                 'string',
@@ -34,7 +34,7 @@ class UserDetailRequest extends FormRequest
                 'max:20', 
                 'min:2',                
             ],
-            'email' =>[
+            'mail' =>[
                 'required',
                 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
                 'email'
@@ -43,19 +43,14 @@ class UserDetailRequest extends FormRequest
                 'required', 
                 'regex:/^0\(\d{3}\) \d{3} \d{2} \d{2}$/', // Türkiye formatı 
             ],
-            'city' =>[
-                'required',
-            ],
-            'county' =>[
-                'required',
-            ],
+           
             
         ];
-        return array_merge($this->addUserRules(),$rules);
+        return $rules;
     }
     public function messages()
     {
-        return array_merge(parent::messages(),$this->customMessages(),
+        return 
         [
             'name.required' => 'Lütfen Adınızı Yazınız...',
             'name.string' => 'Adınız haflerden oluşmalıdır...',
@@ -65,17 +60,13 @@ class UserDetailRequest extends FormRequest
             'surname.string' => 'Soyadınız haflerden oluşmalıdır...',
             'surname.max' => 'Soyad alanına en fazla 20 karakter yazabilirsiniz...',
             'surname.min' => 'Soyad alanına en az 2 karakter yazmalısınız...',
-            'email.required' => 'E Mail alanı boş bırakılamaz...',
-            'email.regex' => 'E Mail alanı formata uygun olmalı...',
-            'email.email' => 'Geçerli bir E Mail adresi girin...',
+            'mail.required' => 'E Mail alanı boş bırakılamaz...',
+            'mail.regex' => 'E Mail alanı formata uygun olmalı...',
+            'mail.email' => 'Geçerli bir E Mail adresi girin...',
             'phone.required' => 'Telefon alanı boş bırakılamaz...',
             'phone.regex' => 'Lütfen telefon numaranızı formata uygun olarak yazınız... ',
-            'city.required' => 'Şehir alanı boş bırakılamaz...',
-            'county.required' => 'İlçe alanı boş bırakılamaz...',
-            'profile_image.image'=>'Sadece resim yükleyebilirsiniz...',
-            'profile_image.max'=>'Resim Max.2MB olmalıdır...',
-            'profile_image.mimes'=>'Sadece şu formatta resim yükleyebilirsiniz : jpeg, png, jpg, gif, svg...'
             
-        ]);
+            
+        ];
     }
 }

@@ -45,7 +45,7 @@
       @endforeach
     @endif 
   
-    <div class="row">
+    <div class="row"> 
       <div class="col-md-6">
         <div class="card mb-4">
           <div class="row">
@@ -100,7 +100,7 @@
     
       <div class="col-md-6">
         <div class="card mb-4">
-          <h5 class="card-header">YENİ ADIM EKLEME </small></h5>
+          <h5 class="card-header">YENİ FİLTRE ADIMI EKLEME </small></h5>
             <div class="card-body mb-3">
               
               <div id="defaultFormControlHelp" class="form-text mb-1">
@@ -111,8 +111,8 @@
                 <input type="hidden" name="user_id" value="{{$userId}}">
                  <table id="classes_table">
                    <tr>
-                   <td class="col-8"> <input type="text" name="title" class="form-control" placeholder="Soru"></td>
-                   <td class="col-2"> <input type="text" name="rank" class="form-control" placeholder="Sıra Numarası"></td>
+                   <td class="col-12"> <input type="text" name="title" class="form-control" placeholder="Soru"></td>
+                   {{-- <td class="col-2"> <input type="text" name="rank" class="form-control" placeholder="Sıra Numarası"></td> --}}
                    <td><button type="submit" class="addClass btn btn-warning me-2">EKLE</button></td>
                    </tr>  
                    </table>

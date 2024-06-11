@@ -59,17 +59,17 @@
           <h5 class="card-header">Profil Detayları</h5>
         </div>
         
-    <div class="row">
+    <div class="row"> 
     
         <div class="col-md">
           <div  class="card mb-3">
             <div class="row g-0">
               <div class="col-md-5">
-                <img class="card-img card-img-left p-1" src="{{asset('backend/assets')}}/img/avatars/teachers_avatar_male.jpg" alt="Card image" />
+                <img class="card-img card-img-left p-1" src="{{asset('backend/assets')}}/img/profileimages/{{ Auth::user()->userDetails->profile_image ?: '/no_image.jpg' }}" alt="Card image" />
               </div> 
                 <div class="col-md-7">
                   <div class="card-body">
-                    <h5 class="card-title">{{$data['teacherData']->name}} {{$data['teacherData']->surname}}</h5> 
+                    <h5 class="card-title">{{Auth::user()->name}} {{Auth::user()->surname}}</h5> 
                     
                     <p class="card-text">
                       Matematik derslerinizde başarılı olmak mı istiyorsun? 15 Yıllık tecrübe sahibi Yeni nesil sorular konusunda uzman bir öğretmenim. 
@@ -95,7 +95,9 @@
               <div class="card-body mb-3" >
                 <small>Sizi en iyi anlatan özet tanıtım cümlenizi yazınız. (150 Karakter)</small>
                   <div class="col-md">
-                      <textarea class="form-control" rows="5"  maxlength="150" name="teacher_short_info" value="" id="">{{$data['teacherProfileData']->teacher_short_info}}  </textarea>
+                      <textarea class="form-control" rows="5"  maxlength="150" 
+                      name="teacher_short_info" value="" id=""
+                      >{{$data['teacherProfileData']?->teacher_short_info}}  </textarea>
                   </div>
                   
               </div>
@@ -108,11 +110,11 @@
               <div class="card-body mb-3">
                 <div class="mb-3" >
                   <label for="firstName" class="form-label">Üniversite</label>
-                  <input class="form-control" type="text"id=""name="teacher_university"value="{{$data['teacherProfileData']->teacher_university}}" autofocus />
+                  <input class="form-control" type="text"id=""name="teacher_university"value="{{$data['teacherProfileData']?->teacher_university}}" autofocus />
                 </div>
                 <div class="mb-3" >
                   <label for="firstName" class="form-label">Tecrübe (Yıl)</label>
-                  <input class="form-control" type="text"id=""name="teacher_experience_year"value="{{$data['teacherProfileData']->teacher_experience_year}}" autofocus />
+                  <input class="form-control" type="text"id=""name="teacher_experience_year"value="{{$data['teacherProfileData']?->teacher_experience_year}}" autofocus />
                 </div>
                 <div class="mb-3" >
                   <div class="form-check checkbox payment-radio">
@@ -130,7 +132,7 @@
               <div class="card-body mb-3" >
                 <small>Sizi en iyi anlatan daha ayrıntılı...</small>
                   <div class="col-md">
-                      <textarea class="form-control" rows="17"  name="teacher_about" value="" id="">{{$data['teacherProfileData']->teacher_about}} </textarea>
+                      <textarea class="form-control" rows="17"  name="teacher_about" value="" id="">{{$data['teacherProfileData']?->teacher_about}} </textarea>
                   </div>
              </div>
     </div>
@@ -147,7 +149,7 @@
             </h2>
             <div id="accordionOne"class="accordion-collapse collapse show"data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                <textarea class="form-control" rows="5"  name="teacher_facility" value="" id=""> {{$data['teacherProfileData']->teacher_facility}}</textarea>
+                <textarea class="form-control" rows="5"  name="teacher_facility" value="" id=""> {{$data['teacherProfileData']?->teacher_facility}}</textarea>
               </div>
             </div>
           </div>
@@ -159,7 +161,7 @@
             </h2>
             <div id="accordionTwo" class="accordion-collapse collapse"aria-labelledby="headingTwo" data-bs-parent="#accordionExample" >
               <div class="accordion-body">
-                <textarea class="form-control" rows="5"  name="teacher_why_lesson" value="" id=""> {{$data['teacherProfileData']->teacher_facility}}</textarea>
+                <textarea class="form-control" rows="5"  name="teacher_why_lesson" value="" id=""> {{$data['teacherProfileData']?->teacher_facility}}</textarea>
               </div>
             </div>
           </div>
@@ -171,7 +173,7 @@
             </h2>
             <div id="accordionThree"class="accordion-collapse collapse"aria-labelledby="headingThree"data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                <textarea class="form-control" rows="5"  name="teacher_experience" value="" id="">{{$data['teacherProfileData']->teacher_facility}} </textarea>
+                <textarea class="form-control" rows="5"  name="teacher_experience" value="" id="">{{$data['teacherProfileData']?->teacher_facility}} </textarea>
               </div>
             </div>
           </div>
@@ -183,7 +185,7 @@
             </h2>
             <div id="accordionFour"class="accordion-collapse collapse"aria-labelledby="headingFour"data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                <textarea class="form-control" rows="5"  name="teacher_bring" value="" id=""> {{$data['teacherProfileData']->teacher_bring}}</textarea>
+                <textarea class="form-control" rows="5"  name="teacher_bring" value="" id=""> {{$data['teacherProfileData']?->teacher_bring}}</textarea>
               </div>
             </div>
           </div>
@@ -195,7 +197,7 @@
             </h2>
             <div id="accordionFive"class="accordion-collapse collapse"aria-labelledby="headingFive"data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                <textarea class="form-control" rows="5"  name="teacher_about_me" value="" id=""> {{$data['teacherProfileData']->teacher_about_me}}</textarea>
+                <textarea class="form-control" rows="5"  name="teacher_about_me" value="" id=""> {{$data['teacherProfileData']?->teacher_about_me}}</textarea>
               </div>
             </div>
           </div>
@@ -207,7 +209,7 @@
             </h2>
             <div id="accordionSix"class="accordion-collapse collapse"aria-labelledby="headingSix"data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                <textarea class="form-control" rows="5"  name="teacher_lesson_process" value="" id=""> {{$data['teacherProfileData']->teacher_lesson_process}}</textarea>
+                <textarea class="form-control" rows="5"  name="teacher_lesson_process" value="" id=""> {{$data['teacherProfileData']?->teacher_lesson_process}}</textarea>
               </div>
             </div>
           </div>
@@ -219,7 +221,7 @@
             </h2>
             <div id="accordionSeven"class="accordion-collapse collapse"aria-labelledby="headingSeven"data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                <textarea class="form-control" rows="5"  name="teacher_advices" value="" id=""> {{$data['teacherProfileData']->teacher_advices}}</textarea>
+                <textarea class="form-control" rows="5"  name="teacher_advices" value="" id=""> {{$data['teacherProfileData']?->teacher_advices}}</textarea>
               </div>
             </div>
           </div>
@@ -233,7 +235,7 @@
               <div class="card-body mb-3" >
                 <small>Kendinizi kısaca tanıtan videonuzun youtube bağlantısını ekleyebilirsiniz.</small>
                   <div class="col-md mt-3">
-                    <input class="form-control" type="text" id="firstName"name="teacher_video_link" value="{{$data['teacherProfileData']->teacher_video_link}}" autofocus />
+                    <input class="form-control" type="text" id="firstName"name="teacher_video_link" value="{{$data['teacherProfileData']?->teacher_video_link}}" autofocus />
                     <input class="form-check-input mt-3" name="video_check" type="checkbox" value="1" id="defaultCheck1"/>
                     <label class="form-check-label mt-3" for="defaultCheck1">Tanıtım videom yok</label>
                   </div>
