@@ -28,6 +28,8 @@ use App\Http\Controllers\Backend\WalletSpentMoneyController;
 use App\Http\Controllers\Backend\WalletTransactionController;
 use App\Http\Controllers\Backend\WalletTransactionTypeController;
 use App\Http\Controllers\Backend\Admin\AdminController;
+use App\Http\Controllers\Backend\Admin\StudentListController;
+use App\Http\Controllers\Backend\Admin\TeacherListController;
 use App\Http\Controllers\Backend\Teacher\TeacherAppointmentListController;
 use App\Http\Controllers\StepQuestionController;
 use App\Http\Controllers\UserDetailController;
@@ -132,6 +134,14 @@ Route::get('appointment_from_student',[TeacherAppointmentListController::class,'
 });
 
 Route::middleware('role:Super-Admin')->group(function () { 
+//Teacher List Route Start
+Route::get('teacher_list',[TeacherListController::class,'index'])->name('admin.teacherList');
+Route::post('/teachers/approve', [TeacherListController::class, 'approve'])->name('admin.teacherList.approved');
+Route::get('/students', [StudentListController::class, 'index'])->name('admin.studentList');
+Route::post('/students/approve', [StudentListController::class, 'approve'])->name('admin.studentList.approved');
+//Teacher List Route End
+
+
 //Lessons Route Section Start
 Route::get('add_lessons_list',[LessonController::class,'addLessonList'])->name('lessons.addLessonList');
 Route::post('add_lessons_store',[LessonController::class,'store'])->name('lessons.addLessonStore');
@@ -140,6 +150,7 @@ Route::post('restore_lessons',[LessonController::class,'restoreLessons'])->name(
 Route::post('force_delete_lessons',[LessonController::class,'forceDeleteLessons'])->name('lessons.forceDeleteLessons');
 
 //Lessons Route Section End
+
 
 //Classes Route Section Start
 Route::get('add_classes',[ClassController::class,'addClassList'])->name('classes.addClassList');

@@ -1,5 +1,7 @@
 <!-- Menu -->
-        
+ @auth
+   
+      
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
       <a href="index.html" class="app-brand-link">
@@ -91,7 +93,7 @@
       <li class="menu-item">
         <a href="" class="menu-link menu-toggle">
           <i class="menu-icon tf-icons bx bx-dock-top"></i>
-          <div data-i18n="Account Settings">Ders İstekleri</div>
+          <div data-i18n="Account Settings">Gelen Ders Talepleri</div>
         </a>
         <ul class="menu-sub">
           <li class="menu-item">
@@ -179,7 +181,7 @@
       <!-- Öğretmenler -->
       <li class="menu-header small text-uppercase"><span class="menu-header-text">Öğretmenler</span></li>
       <li class="menu-item">
-        <a href="tables-basic.html" class="menu-link">
+        <a href="{{route('admin.teacherList')}}" class="menu-link">
           <i class="menu-icon tf-icons bx bx-user-check"></i>
           <div data-i18n="Tables">Öğretmen Onayla</div>
         </a>
@@ -208,7 +210,7 @@
         <!-- Raporlama -->
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Raporlama</span></li>
         <li class="menu-item">
-          <a href="tables-basic.html" class="menu-link">
+          <a href="{{route('admin.teacherList')}}" class="menu-link">
             <i class="menu-icon tf-icons bx bx-user-pin"></i>
             <div data-i18n="Tables">Öğretmen Listesi</div>
           </a>
@@ -245,3 +247,4 @@
     </ul>
   </aside>
   <!-- / Menu -->
+  @endauth 

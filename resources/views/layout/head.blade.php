@@ -13,7 +13,7 @@
     <meta name="csrf-token" content="@php echo csrf_token(); @endphp">
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{asset('Backend/assets')}}/img/favicon/favicon.ico" />
-
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -46,4 +46,4 @@
 
     <link rel="stylesheet" href="sweetalert2.min.css">
 
-    @stack('custom-head')
+   

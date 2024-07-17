@@ -3,7 +3,7 @@
 <title> Destek Hoca / ... </title>
 @endsection
 
-@push('custom-head')
+@section('css')
    <!-- Icons. Uncomment required icon fonts -->
    <link rel="stylesheet" href="{{asset('backend/assets')}}/vendor/fonts/boxicons.css" />
 
@@ -24,7 +24,7 @@
    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
    <script src="{{asset('backend/assets')}}/js/config.js"></script>
-@endpush
+@endsection
 
 @section('js')
    

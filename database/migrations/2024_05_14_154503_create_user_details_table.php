@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('county')->comment("İlçe")->nullable();
             $table->string('district')->comment("Mahalle")->nullable();
             $table->string('profile_image')->comment("fotoğraf yolu")->nullable();
+            $table->boolean('approved')->nullable()->default(1);
             $table->timestamps();
             $table->softDeletes()->comment("Çöp Kutusu");
         });

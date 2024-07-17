@@ -20,6 +20,7 @@ class UserDetail extends Model
         'county',
         'district',
         'profile_image',
+        'approved',
         
     ];
 

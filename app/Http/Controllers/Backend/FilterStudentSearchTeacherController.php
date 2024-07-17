@@ -69,7 +69,7 @@ class FilterStudentSearchTeacherController extends Controller
     }
     public function searchEnd(Request $request)
     {
-        if (auth()->user()) {
+        if (!auth()->user()) {
            $studentFilters = $this->studentPrivateLessonSearchService->getWithWhere(['session_id' => session()->getId()]);
             if (!empty($request->select_teacher_id)) {
                 $selectTeacherId = $request->select_teacher_id;

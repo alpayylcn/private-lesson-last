@@ -59,8 +59,8 @@
                 
                    @if($appointment->unregistered_student_id)
                       </tr>
-                        <td><strong>{{$appointment->unregistered_student_id}}</strong></td> 
-                        <td><strong>DDD</strong></td> 
+                        <td><strong>{{$appointment->unregistered_student->name}}</strong></td> 
+                        <td><strong>{{$appointment->unregistered_student->surname}}</strong></td> 
                         {{-- <td><strong>DDD</strong></td> --}}
                         <td><strong><button type="button" class="form-control bg-primary text-white">GÖSTER</button></strong></td>
                       </tr>

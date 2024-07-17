@@ -10,6 +10,62 @@ class UserService{
        
     public function __construct(protected User $users){}   
        
+
+    public function getTeachers($search = null)
+    {
+        $query = $this->users->role('teacher')->with('userDetails');//Rolü Teacher olan kullanıcıları getir
+
+        if ($search) { // arama parametresi gelirse bu satırları çalıştır.
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+
+        return $query->paginate(1);//bir sayfada bulunacak satır sayısı
+    }
+
+    public function countTeachers()
+    {
+        return [
+            'total' => $this->users->role('teacher')->count(), //Toplam kayıtlı öğretmen sayısı
+            'unapproved' => $this->users->role('teacher')->where('approved', 0)->count(), //Onay bekleyen öğretmenlerin sayısı
+        ];
+    }
+
+    public function getStudents($search = null)
+    {
+        $query = $this->users->role('student')->with('userDetails');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+
+        return $query->paginate(1);
+    }
+    public function countStudents()
+    {
+        return [
+            'total' => $this->users->role('student')->count(),
+            'unapproved' => $this->users->role('student')->where('approved', false)->count(),
+        ];
+    }
+
+    public function approveUser($userId, $approved)
+    {
+        $user = $this->users->find($userId);
+
+        if ($user) {
+            $user->approved = $approved;
+            $user->save();
+            return $user;
+        }
+
+        return null;
+    }
     public function create(array $usersData){
         
         return $this->users->create($usersData);

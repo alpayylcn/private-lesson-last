@@ -23,5 +23,8 @@ class TeacherAppointmentList extends Model
         public function user(){
             return $this->hasOne(User::class,'id','student_id'); 
         }
+        public function unregistered_student(){
+            return $this->hasOne(UnregisteredStudent::class,'id','unregistered_student_id'); 
+        }
    
 }
