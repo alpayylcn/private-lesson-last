@@ -3,6 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\Backend\Lesson;
+use App\Models\Backend\LessonRequest;
+use App\Models\Backend\TeacherToLessonAndClass;
+use App\Models\Backend\Wallet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -52,5 +57,23 @@ class User extends Authenticatable
 
     public function userDetails():HasOne{
         return $this->hasOne(UserDetail::class,'user_id','id');
+    }
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
+    public function lessons()
+    {
+        return $this->belongsToMany(Lesson::class, 'teacher_to_lesson_and_classes', 'user_id', 'lesson_id');
+    }
+   
+    public function teacherLessons()
+    {
+        return $this->hasMany(TeacherToLessonAndClass::class, 'user_id');
+    }
+
+    public function hasActiveAdvertisement()
+    {
+        return $this->userDetails && $this->userDetails->has_advertisement;
     }
 }

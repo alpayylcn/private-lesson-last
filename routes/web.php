@@ -28,10 +28,14 @@ use App\Http\Controllers\Backend\WalletSpentMoneyController;
 use App\Http\Controllers\Backend\WalletTransactionController;
 use App\Http\Controllers\Backend\WalletTransactionTypeController;
 use App\Http\Controllers\Backend\Admin\AdminController;
+use App\Http\Controllers\Backend\Admin\CreditSettingController;
 use App\Http\Controllers\Backend\Admin\StudentListController;
 use App\Http\Controllers\Backend\Admin\TeacherListController;
 use App\Http\Controllers\Backend\Teacher\TeacherAppointmentListController;
+use App\Http\Controllers\LessonRequestController;
+use App\Http\Controllers\RequestController;
 use App\Http\Controllers\StepQuestionController;
+use App\Http\Controllers\TeacherCardController;
 use App\Http\Controllers\UserDetailController;
 use App\Models\Backend\TeacherAppointmentList;
 use Illuminate\Support\Facades\Route;
@@ -49,9 +53,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    
+    
 });
 
 require __DIR__.'/auth.php';
+
+
+Route::get('/lesson-request', [LessonRequestController::class, 'showRequestForm'])->name('lesson.request.form');
+Route::get('/lesson-approve', [LessonRequestController::class, 'showApprovePage'])->name('lesson.approve.page');
+Route::post('/lesson-request', [LessonRequestController::class, 'requestLesson'])->name('lesson.request');
+Route::post('/lesson-approve', [LessonRequestController::class, 'approveRequest'])->name('lesson.approve.ajax');
 
 
 
@@ -128,12 +141,15 @@ Route::post('teachers_profile_update_lessons',[TeacherDetailsController::class,'
 
 //Teacher Appointments
 Route::get('appointment_from_student',[TeacherAppointmentListController::class,'index'])->name('teachers_profile.appointment_from_student');
+Route::get('appointment_from_admin',[TeacherAppointmentListController::class,'fromAdmin'])->name('teachers_profile.appointment_from_admin');
+// Öğrenci ders isteği oluşturma
 
 
 
 });
 
 Route::middleware('role:Super-Admin')->group(function () { 
+
 //Teacher List Route Start
 Route::get('teacher_list',[TeacherListController::class,'index'])->name('admin.teacherList');
 Route::post('/teachers/approve', [TeacherListController::class, 'approve'])->name('admin.teacherList.approved');
@@ -203,4 +219,24 @@ Route::post('api/fetch-county',[UserDetailController::class,'fetchCounty'])->nam
 
 
 
+});
+//Teacher Cards Business Route Section Start
+Route::get('teacher_cards',[TeacherCardController::class,'index'])->name('teacher_cards.index');
+//Teacher Cards Business Route Section End
+
+// İlan verme formu ve ilan verme işlemleri için rotalar
+    Route::middleware(['auth', 'role:Teacher'])->group(function () {
+    // İlan verme formunu göster
+    Route::get('/advertisement/create', [TeacherCardController::class, 'showCreateAdvertisementForm'])->name('advertisement.create');
+
+    // İlan verme işlemini yap
+    Route::post('/advertisement/spend-credits', [TeacherCardController::class, 'spendCredits'])->name('teachers.spend-credits');
+});
+
+
+// Kredi miktarları belirleme işlemi
+
+Route::middleware(['auth', 'role:Super-Admin'])->group(function () {
+    Route::get('/admin/credit-settings', [CreditSettingController::class, 'edit'])->name('admin.credit-settings.edit');
+    Route::put('/admin/credit-settings', [CreditSettingController::class, 'update'])->name('admin.credit-settings.update');
 });

@@ -6,7 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Backend\TeacherAppointmentList;
 use App\Http\Requests\StoreTeacherAppointmentListRequest;
 use App\Http\Requests\UpdateTeacherAppointmentListRequest;
+use App\Models\Backend\Lesson;
+use App\Models\Backend\LessonRequest;
+use App\Models\Backend\TeacherRequest;
 use App\Services\Backend\TeacherAppointmentListService;
+use Illuminate\Support\Facades\Auth;
 
 class TeacherAppointmentListController extends Controller
 {
@@ -18,6 +22,13 @@ class TeacherAppointmentListController extends Controller
     {
         $appointmentList=$this->teacherAppointmentListService->getWithWhere();
         return view('teachers.appointment_from_student',compact('appointmentList'));
+    }
+    
+    public function fromAdmin()
+    {
+        $lessonRequests = LessonRequest::with('student')->get();
+
+        return view('teachers.appointment_from_admin', compact('lessonRequests'));
     }
 
     /**

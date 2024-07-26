@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('wallet_transactions', function (Blueprint $table) {
             $table->id();
-            $table->integer('wallet_transaction_type_id')->comment("Hareket türü; kredi yükleme , doping harcama");
-            $table->enum('type',['add','spent'])->default('add')->comment("yükleme mi, harcama mı olduğunu belirtir ");
-            $table->integer('relation_id')->comment("eğer yükleme type ı varsa  wallet_added_money tablosunun id sini alacak, harcama varsa wallet_movements tablosunun id sini alacak");
+            $table->foreignId('wallet_id')->constrained('wallets')->onDelete('cascade')->comment("cüzdan id si ");
+            $table->decimal('amount', 10, 2)->comment("harcanan miktar");
+            $table->integer('currency_id')->comment("Para birimi  ");
+            $table->foreignId('reason_id')->constrained('reasons')->onDelete('cascade')->comment("harcama sebebi ");
+            $table->string('transaction_type')->nullable(); // "yükleme" veya "harcama" // "expenditure" veya "income"
             $table->timestamps();
-
-        });
+       });
     }
 
     /**
@@ -29,3 +30,4 @@ return new class extends Migration
         Schema::dropIfExists('wallet_transactions');
     }
 };
+

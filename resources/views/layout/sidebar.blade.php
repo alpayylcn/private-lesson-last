@@ -98,12 +98,12 @@
         <ul class="menu-sub">
           <li class="menu-item">
             <a href="{{route('teachers_profile.appointment_from_student')}}" class="menu-link">
-              <div data-i18n="Account">Öğrenciden Gelen</div>
+              <div data-i18n="Account">İlanlardan Gelen Talepler</div>
             </a>
           </li>
           <li class="menu-item">
-            <a href="#" class="menu-link">
-              <div data-i18n="Notifications">Adminden Gelen</div>
+            <a href="{{route('lesson.approve.page')}}" class="menu-link">
+              <div data-i18n="Notifications">Teklife Açık Talepler  </div>
             </a>
           </li>
           
@@ -112,32 +112,52 @@
       @endrole
       @role('Student')
       <li class="menu-header small text-uppercase">
-        <span class="menu-header-text">ÖĞRENCİ</span>
+        <span class="menu-header-text">ÖĞRENCİ PANELİ</span>
       </li>
       @endrole
-        <li class="menu-item">
-        <a href="" class="menu-link menu-toggle">
-          <i class="menu-icon tf-icons bx bx-dock-top"></i>
-          <div data-i18n="Account Settings">Kişisel Bilgiler</div>
+
+      <li class="menu-item">
+        <a href="{{route('users_profile.index')}}"class="menu-link">
+          <i class="menu-icon tf-icons bx bx-user-pin"></i>
+          <div data-i18n="Support">Kişisel Bilgiler</div>
         </a>
-        <ul class="menu-sub">
-          <li class="menu-item">
-            <a href="{{route('users_profile.index')}}" class="menu-link">
-              <div data-i18n="Account">Üyelik Bilgileri</div>
-            </a>
-          </li>
-          <li class="menu-item">
-            <a href="#" class="menu-link">
-              <div data-i18n="Notifications">Bildirimler</div>
-            </a>
-          </li>
-          <li class="menu-item">
-            <a href="#" class="menu-link">
-              <div data-i18n="Connections">Mesajlar</div>
-            </a>
-          </li>
-        </ul>
       </li>
+
+      
+      @role('Teacher')
+      <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">İLAN</span>
+      </li>
+      <li class="menu-item">
+        <a href="{{route('advertisement.create')}}"class="menu-link">
+          <i class="menu-icon tf-icons bx bx-line-chart"></i>
+          <div data-i18n="Support">İlan Ver</div>
+        </a>
+      </li>
+      @endrole
+      @role('Student')
+      <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">DERS TALEBİ</span>
+      </li>
+      <li class="menu-item">
+        <a href="{{route('teacher_cards.index')}}"class="menu-link">
+          <i class="menu-icon tf-icons bx bx-user-pin"></i>
+          <div data-i18n="Support">Öğretmen Ara</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="{{route('all_step_filter')}}"class="menu-link">
+          <i class="menu-icon tf-icons bx bx-book-open"></i>
+          <div data-i18n="Support">Ders Ara</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="{{route('lesson.request')}}"class="menu-link">
+          <i class="menu-icon tf-icons bx bx-book-open"></i>
+          <div data-i18n="Support">Doğrudan Ders İste</div>
+        </a>
+      </li>
+      @endrole
       @role('Super-Admin')
       <li class="menu-item">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -201,6 +221,12 @@
       <!-- Cüzdan -->
       <li class="menu-header small text-uppercase"><span class="menu-header-text">Cüzdan</span></li>
       <li class="menu-item">
+        <a href="{{route('admin.credit-settings.edit')}}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-money"></i>
+          <div data-i18n="Tables">Kredi Miktarları</div>
+        </a>
+      </li>
+      <li class="menu-item">
         <a href="tables-basic.html" class="menu-link">
           <i class="menu-icon tf-icons bx bx-money"></i>
           <div data-i18n="Tables">Kredi Hediye Et</div>
@@ -225,21 +251,13 @@
       <!-- Destek -->
       <li class="menu-header small text-uppercase"><span class="menu-header-text">Destek</span></li>
       <li class="menu-item">
-        <a
-          href=""
-          target="_blank"
-          class="menu-link"
-        >
+        <a href=""target="_blank" class="menu-link">
           <i class="menu-icon tf-icons bx bx-support"></i>
           <div data-i18n="Support">Destek</div>
         </a>
       </li>
       <li class="menu-item">
-        <a
-          href=""
-          target="_blank"
-          class="menu-link"
-        >
+        <a href=""target="_blank" class="menu-link">
           <i class="menu-icon tf-icons bx bx-file"></i>
           <div data-i18n="Documentation">Dokümanalar</div>
         </a>

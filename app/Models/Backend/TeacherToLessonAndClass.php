@@ -41,8 +41,12 @@ class TeacherToLessonAndClass extends Model
     {
         return $this->hasOne(Classes::class,'id','class_id');
     } 
+    public function teacher()
+    {
+        return $this->belongsTo(User::class,'id', 'user_id');
+    }
    
-
+   
 
 
 }

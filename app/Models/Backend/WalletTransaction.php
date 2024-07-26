@@ -18,24 +18,10 @@ class WalletTransaction extends Model
         'created_at' => 'datetime:Y-m-d',
         'updated_at' => 'datetime:Y-m-d'
     ];
-    protected $fillable = [
-        'wallet_transaction_type_id',
-        'type',        
-        'relation_id'       
-                
-    ];
-    public function wallet_transaction_type() :HasOne
-        {
-            return $this->hasOne(WalletTransactionType::class,'id','wallet_transaction_type_id');
-        } 
-        public function add_money_relation() :HasOne
-        {
-            return $this->hasOne(WalletAddedMoney::class,'id','relation_id')->where('type',1);
-        } 
-        public function spent_money_relation() :HasOne
-        {
-            return $this->hasOne(WalletSpentMoney::class,'id','relation_id')->where('type',0);
-        } 
+    protected $fillable = ['wallet_id', 'amount','currency_id','reason_id', 'transaction_type'];
+    public function wallet()
+    {
+        return $this->belongsTo(Wallet::class);
+    }
 
-    //???? eğer yükleme type ı varsa  wallet_added_money tablosunun id sini alacak, harcama varsa WalletSpentMoney tablosunun id sini alacak
 }

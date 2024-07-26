@@ -35,8 +35,8 @@
 
     <link rel="stylesheet" href="{{asset('Backend/assets')}}/vendor/libs/apex-charts/apex-charts.css" />
     
-    <!-- Page CSS -->
-
+    <!-- toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/> 
     <!-- Helpers -->
     <script src="{{asset('Backend/assets')}}/vendor/js/helpers.js"></script>
 

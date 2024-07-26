@@ -21,6 +21,7 @@ class UserDetail extends Model
         'district',
         'profile_image',
         'approved',
+        'has_advertisement',
         
     ];
 

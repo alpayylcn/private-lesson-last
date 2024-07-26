@@ -45,5 +45,8 @@ class Lesson extends Model
         {
             return $this->teacher_to_lesson_price()->exists();
         }
-        
+        public function teacherLessons()
+        {
+            return $this->hasMany(TeacherToLessonAndClass::class);
+        }
 }

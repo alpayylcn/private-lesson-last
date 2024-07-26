@@ -23,14 +23,19 @@ class Wallet extends Model
         'user_id',     
         'balance',        
         'currency_id',        
-        'is_active'        
+        'is_active' ,
+        'spending_reason',       
     ];
     public function currency() :HasOne
     {
         return $this->hasOne(Currency::class,'id','currency_id');
     } 
-    public function user() :HasOne
+    public function user()
     {
-        return $this->hasOne(User::class,'id','user_id');
+        return $this->belongsTo(User::class);
+    }
+    public function transactions()
+    {
+        return $this->hasMany(WalletTransaction::class);
     }
 }

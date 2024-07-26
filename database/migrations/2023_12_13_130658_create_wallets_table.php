@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('wallets', function (Blueprint $table) {
             $table->id();
             $table->string('title',255)->comment("Cüzdanın Adı");
-            $table->integer('user_id')->comment("Cüzdan sahibi, User tablosundan çekilecek");
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->decimal('balance', 10, 2)->default(0.00)->comment("cüzdanda bulunan bakiye");
             $table->integer('currency_id')->comment("Para birimi  ");
             $table->boolean('is_active')->default(true)->comment("Cüzdanın aktif pasif ola durumu ");
