@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFilterStudentSearchTeacherRequest;
+use App\Services\Backend\LessonRequestService;
 use Illuminate\Http\Request;
 use App\Services\Backend\LessonService;
 use App\Services\Backend\StepQuestionService;
@@ -21,6 +22,7 @@ class FilterStudentSearchTeacherController extends Controller
         protected StepOptionTitleService $stepOptionTitleService,
         protected StudentPrivateLessonSearchService $studentPrivateLessonSearchService,
         protected TeacherAppointmentListService $teacherAppointmentListService,
+        protected LessonRequestService $lessonRequestService,
         ){}
     public function index()
     {
@@ -69,13 +71,19 @@ class FilterStudentSearchTeacherController extends Controller
     }
     public function searchEnd(Request $request)
     {
-        if (!auth()->user()) {
+        if (auth()->user()) { // Öğrenci kayıtlı ise
            $studentFilters = $this->studentPrivateLessonSearchService->getWithWhere(['session_id' => session()->getId()]);
-            if (!empty($request->select_teacher_id)) {
+            if (!empty($request->select_teacher_id)) { // Öğretmen listeden seçildi ise "Öğretmeni ben seçeceğim"
                 $selectTeacherId = $request->select_teacher_id;
                 $teacherAppointmentListStore = $this->teacherAppointmentListService->create(['student_id' => auth()->user()->id, 'teacher_id' => $request->select_teacher_id]);
-             }
-            return view('filter_lesson.filter_lesson_search_end', compact('studentFilters'));
+            }else{//Öğretmen beni arasın
+                // Filtrelenmiş verilerden question_id'si 1 (Hangi Ders? sorusu) olan satırı çek 
+                $lessonData = $studentFilters->firstWhere('step_question_id', 1);
+                //İlgili öğretmenlere ders talebi gönder.
+                $result = $this->lessonRequestService->requestLesson($lessonData->step_option_id);
+            }
+            return redirect()->route('lesson_request_list.index');
+            //return view('filter_lesson.filter_lesson_search_end', compact('studentFilters'));
 
         } else {
             if (!empty($request->select_teacher_id)) {

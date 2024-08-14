@@ -2,6 +2,7 @@
 namespace App\Services\Backend;
 
 use App\Models\Backend\CreditSetting;
+use App\Models\Backend\Duration;
 use App\Models\User;
 
 use App\Models\Backend\WalletTransaction;
@@ -11,8 +12,8 @@ class CreditService
     public function spendCredits(User $user, $durationId, $reasonId)
     {
         // İlgili kredi miktarını bul
-        $creditSetting = CreditSetting::where('duration_id', $durationId)->firstOrFail();
-        $creditAmount = $creditSetting->credit_amount;
+        $creditSetting = Duration::where('id', $durationId)->firstOrFail();
+        $creditAmount = $creditSetting->price;
 
         // Cüzdandaki bakiyeyi kontrol et
         if ($user->wallet->balance < $creditAmount) {

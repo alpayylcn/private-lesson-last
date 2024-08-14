@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Backend\Lesson;
 use App\Services\Backend\LessonRequestService;
+use App\Services\Backend\StudentPrivateLessonSearchService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LessonRequestController extends Controller
 {
-    public function __construct(protected LessonRequestService $lessonRequestService){}   
+    public function __construct(
+        protected LessonRequestService $lessonRequestService,
+        protected StudentPrivateLessonSearchService $studentPrivateLessonSearchService,
+        
+        ){}   
     public function showRequestForm()
     {
         $lessons = Lesson::all();
@@ -29,10 +34,26 @@ class LessonRequestController extends Controller
 
     public function showApprovePage()
     {
-        $teacherId = Auth::id();
-        $lessonRequests = $this->lessonRequestService->getLessonRequestsForTeacher($teacherId);
-        //dd($lessonRequests);
-        return view('teachers.appointment_from_admin', compact('lessonRequests'));
+         // Mevcut öğretmenin ID'sini al
+    $teacherId = Auth::id();
+    
+    // Öğretmenin ders taleplerini al
+    $lessonRequests = $this->lessonRequestService->getLessonRequestsForTeacher($teacherId);
+    
+    // Tüm session_id'lere göre filtrelenmiş verileri depolamak için bir koleksiyon oluştur
+    $studentFiltersCollection = collect();
+
+    // Her bir ders talebi için
+    foreach ($lessonRequests as $request) {
+        // İlgili session_id'ye göre filtrelenmiş verileri al
+        $studentFilters = $this->studentPrivateLessonSearchService->getWithWhere(['session_id' => $request->session_id]);
+
+        // Filtrelenmiş verileri koleksiyona ekle
+        $studentFiltersCollection = $studentFiltersCollection->concat($studentFilters);
+    }
+
+    // Verileri Blade şablonuna gönder
+    return view('teachers.appointment_from_admin', compact('lessonRequests', 'studentFiltersCollection'));
 
 
     }

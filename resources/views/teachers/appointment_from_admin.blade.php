@@ -17,56 +17,93 @@
 <!-- Content -->
 
 <div class="container-xxl flex-grow-1 container-p-y">
-<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Ayarlar /</span> Profil Sayfası</h4>
 
-<div class="row">
    
-    <input type="hidden" name="user_id" value="1">
+   
   <div class="col-md-12">
     <ul class="nav nav-pills flex-column flex-md-row mb-3">
-      
-      
-      <li class="nav-item">
-        <a class="nav-link  active" href="{{route('teachers_profile.lessonPrice')}}"
-          ><i class="bx bx-money  me-1"></i>Ders Talepleri / Teklife Açık</a>
-      
-      
-     
+        <li class="nav-item m-2">
+            <a class="nav-link  active" href="{{route('lesson.approve.page')}}">
+            <i class="bx bx-money  me-1"></i>Ders Talepleri / Teklife Açık
+        </a>
+        <li class="nav-item m-2">
+            <a class="nav-link  active" href="{{route('teachers_profile.appointment_from_student')}}">
+            <i class="bx bx-money  me-1"></i>Ders Talepleri / İlanlardan Gelen
+        </a>
     </ul>
     <div class="card mb-4">
       <h5 class="card-header">Teklife Açık Ders Talepleri</h5>
       <!-- Account -->
       
-      <hr class="my-0" />
     </div>
-     
-    <div id="lesson-requests">
-      @foreach ($lessonRequests as $request)
-          <div class="card mb-3 lesson-request" data-id="{{ $request->id }}">
-              <div class="card-body">
-                  <h5 class="card-title">{{ $request->student->name }} {{ $request->student->surname }}</h5>
-                  <p class="card-text">Ders Adı: {{ $request->lesson->title }}</p>
-                  <p class="card-text">Talep Zamanı: {{ $request->formatted_request_time }}</p>
+    
+        <div class="row g-3" id="lesson-requests">
+            @forelse ($lessonRequests as $request)
+            @if ($request->approval_count<5 && $request->request_duration >0)
+            <div class="col-md-4 lesson-request" data-id="{{ $request->id }}">
+                <div class="p-3 border bg-light card">
+                    <h5 class="card-title">{{ $request->student->name }} {{ $request->student->surname }} - {{ $request->lesson->title }}</h5>
+                  <p class="card-text"><b>İl / İlçe:</b> {{ $request->student->userDetails->cityName->city }} / {{ $request->student->userDetails->countyName->county }}</p>
+                  <p class="card-text text-danger">Talep Zamanı: {{ $request->formatted_request_time }}</p>
+                  
+                  <hr>
+                  <h5 class="card-text">İlan Özeti</h5>
 
+                  @php
+                  // lessonRequest'in session_id'sine göre studentFilters verilerini filtrele
+                  $filteredStudentFilters = $studentFiltersCollection->where('session_id', $request->session_id);
+                    @endphp
+
+                  @forelse ($filteredStudentFilters as $studentFilter)
+                  @if ($studentFilter->step_question_id==1 )
+                    <p class="card-text">
+                        <b> {{$studentFilter->stepQuestionTitle?->title}} : &nbsp;&nbsp;</b> {{$studentFilter->stepLessonTitle?->title}}</a> 
+                    </p>
+                @elseif ($studentFilter->step_question_id==2 )
+                    <p class="card-text">
+                        <b> {{$studentFilter->stepQuestionTitle?->title}} : &nbsp;&nbsp;</b> {{$studentFilter->stepClassTitle?->title}}</a>
+                    </p>
+                @else
+                    <p class="card-text">
+                        <b> {{$studentFilter->stepQuestionTitle?->title}} : &nbsp;&nbsp;</b> {{$studentFilter->stepOptionTitle?->title}}</a>  
+                    </p>
+                @endif
+                  @empty
+                      Listelenecek öğe yok
+                  @endforelse
+                  
+                  <hr>
+                
                   @if (in_array(auth()->id(), json_decode($request->approved_teachers, true) ?? []))
                   <div class="phone-number">
                       Telefon Numarası: {{ $request->student->userDetails->phone }}
                   </div>
+                 
                   <button type="button" class="btn btn-success" disabled>Onaylandı</button>
+                  
+
                   @elseif ($request->approval_count >= 5)
                   <button type="button" class="btn btn-success" disabled>Onay Sınırına Ulaşıldı</button>
               @else
                  
-                  <button type="button" class="btn btn-info approve-btn" data-request-id="{{ $request->id }}">Talebi Onayla / <small class="badge bg-primary text-wra">{{ $request->required_credits }} Kredi</small> </button>
+                  <button type="button" class="btn btn-info approve-btn" data-request-id="{{ $request->id }}">Talebi Onayla / <small class="badge bg-primary text-wra">{{ $request->required_credits }} TL</small> </button>
+                  
               @endif
-
-
-              </div>
-          </div>
-      @endforeach
-  </div>
+              <button type="button" class="btn btn-danger mt-2" data-request-id="{{ $request->id }}">İlanı Listemden Kaldır  </button> 
+                </div>
+            </div>    
+            @endif
+            
+            @empty
+            Listelenecek öğe yok
+            @endforelse
+           
+        </div>
     
-        
+
+    
+    
+  
         </div>
     </div>
   </div>
@@ -94,11 +131,9 @@
               success: function(response) {
                   if (response.status === 200) {
                       // Başarılı onaylama durumunda butonu pasif hale getir ve telefon numarasını göster
-                      button.prop('disabled', true);
-                      button.text('Onaylandı');
-                      card.find('.phone-number').remove();
-                      card.append('<div class="phone-number">Telefon Numarası: ' + response.phone + '</div>');
+                      
                       toastr.success(response.message);
+                      location.reload(); // Sayfayı yenile
                   } else {
                       toastr.error(response.message);
                   }

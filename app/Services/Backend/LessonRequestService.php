@@ -2,23 +2,29 @@
 namespace App\Services\Backend;
 
 use App\Models\Backend\LessonRequest;
+use App\Models\Backend\RequestDuration;
 use App\Models\Backend\TeacherToLessonAndClass;
 use App\Models\Backend\Wallet;
 use App\Models\TeacherLesson;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session as FacadesSession;
 
 class LessonRequestService
 {
     public function requestLesson($lessonId)
     {
         $student = Auth::user();
-
+        $sessionId = FacadesSession::getId();
+        $requestDuration=RequestDuration::first();
+        
         // Öğrenci ders talebini oluştur
         $lessonRequest = LessonRequest::create([
             'student_id' => $student->id,
             'lesson_id' => $lessonId,
-        ]);
+            'session_id'=>$sessionId,
+            'request_duration'=>$requestDuration->duration_days,
+        ]); 
 
         // İlgili dersi veren öğretmenlere talebi gönder
         $teachers = TeacherToLessonAndClass::where('lesson_id', $lessonId)->get();
@@ -44,11 +50,31 @@ class LessonRequestService
 
             
         }
-
         // Talep zamanını formatlayın
-           
-       
-            return $lessonRequest;
+          return $lessonRequest;
+    }
+
+    public function getLessonRequestsForStudent(int $studentId)
+    {
+        
+         $lessonRequest = LessonRequest::where('student_id', $studentId)->get();
+         foreach ($lessonRequest as $request) {
+            
+            $request->formatted_request_time = Carbon::parse($request->created_at)->locale('tr')->diffForHumans();
+        }
+         return $lessonRequest;
+    }
+    
+    public function cancelRequest($id)
+    {
+        $lessonRequest = LessonRequest::findOrFail($id);
+
+        if ($lessonRequest) {
+            $lessonRequest->delete(); // Soft delete the record
+            return ['success' => true, 'message' => 'Talep başarıyla iptal edildi.'];
+        }
+
+        return ['success' => false, 'message' => 'Talep iptal edilemedi.'];
     }
 
     public function approveRequest($requestId)
@@ -96,7 +122,7 @@ class LessonRequestService
         $lessonRequest->approval_count = count($approvedTeachers);
         $lessonRequest->status = 'approved'; // Onaylı olarak işaretle
         $lessonRequest->save();
-
+   
         // Öğrenci telefon numarası bilgisi
         $studentPhoneNumber = $lessonRequest->student->userDetails->phone;
 
@@ -107,7 +133,7 @@ class LessonRequestService
         ]);
     }
 
-    private function getApprovalCost($approvalCount)
+    private function getApprovalCost(int $approvalCount)
     {
         switch ($approvalCount) {
             case 0: return 100;

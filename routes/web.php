@@ -29,9 +29,12 @@ use App\Http\Controllers\Backend\WalletTransactionController;
 use App\Http\Controllers\Backend\WalletTransactionTypeController;
 use App\Http\Controllers\Backend\Admin\AdminController;
 use App\Http\Controllers\Backend\Admin\CreditSettingController;
+use App\Http\Controllers\Backend\Admin\RequestDurationController;
 use App\Http\Controllers\Backend\Admin\StudentListController;
 use App\Http\Controllers\Backend\Admin\TeacherListController;
+use App\Http\Controllers\Backend\Student\LessonRequestListController;
 use App\Http\Controllers\Backend\Teacher\TeacherAppointmentListController;
+use App\Http\Controllers\DurationController;
 use App\Http\Controllers\LessonRequestController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\StepQuestionController;
@@ -98,7 +101,12 @@ Route::resources([
 Route::post('all_step_filter_end',[FilterStudentSearchTeacherController::class,'searchEnd'])->name('all_step_filter.searchEnd');
 Route::post('all_step_filter_create',[FilterStudentSearchTeacherController::class,'stepCreate'])->name('all_step_filter.stepCreate');
 Route::post('all_step_filter_update',[FilterStudentSearchTeacherController::class,'stepUpdate'])->name('all_step_filter.stepUpdate');
-Route::resource('all_step_filter',FilterStudentSearchTeacherController::class,['names' => ['index'=>'all_step_filter']]);
+Route::resource('all_step_filter',FilterStudentSearchTeacherController::class,['names' => ['index'=>'all_step_filter']])->middleware('renew.session');
+
+// Öğrencinin açtığı ilanların listesi.
+Route::get('lesson_request_list',[LessonRequestListController::class,'index'])->name('lesson_request_list.index');
+Route::post('/lesson_request/cancel', [LessonRequestListController::class, 'cancelRequest'])->name('lesson_request.cancel');
+
 
 // unregistered student create ->student "teacher search" filter
 Route::get('all_step_filter_contact_form/{param}',[UnregisteredStudentController::class,'contactForm'])->name('all_step_filter.contactForm');
@@ -207,10 +215,23 @@ Route::get('admin_filter_lesson_time_period_edit',[FilterLessonTimePeriodControl
 Route::get('admin_filter_lesson_start_time_edit',[FilterLessonStartTimeController::class,'filterLessonStartTimeEdit'])->name('admin.filterLessonStartTimeEdit');
 Route::get('admin_filter_lesson_type_edit',[FilterTypeController::class,'filterLessonTypeEdit'])->name('admin.filterLessonTypeEdit');
 //Admin Filter Section End
+
+//duration ekle ilan ve teklif bilgileri
+Route::get('/durations', [DurationController::class, 'index'])->name('durations.index');
+Route::post('/durations', [DurationController::class, 'store'])->name('durations.store');
+Route::get('/durations/{id}', [DurationController::class, 'show'])->name('durations.show');
+Route::put('/durations/{id}', [DurationController::class, 'update'])->name('durations.update');
+Route::delete('/durations/{id}', [DurationController::class, 'destroy'])->name('durations.destroy');
+
 });
 
 //Admin Route Section Start
 Route::get('admin_dashboard',[AdminController::class,'index'])->name('admin_dashboard.index');
+
+    //Request Duration route Start
+    Route::resource('request_durations', RequestDurationController::class);
+    //Request Duration route End
+
 //Admin Route Section End
 
 //City County js Home

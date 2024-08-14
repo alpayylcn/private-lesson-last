@@ -35,18 +35,18 @@ class TeacherListController extends Controller
     }
 
     public function approve(Request $request)
-{
+    {
 
-    $userId = $request->input('id');
-    $approved = $request->input('approved');
-    
-    $user = $this->userService->approveUser($userId, $approved);
+        $userId = $request->input('id');
+        $approved = $request->input('approved');
+        
+        $user = $this->userService->approveUser($userId, $approved);
 
-    if ($user) {
-        return response()->json(['success' => true]);
+        if ($user) {
+            return response()->json(['success' => true]);
+        }
+
+            return response()->json(['success' => false],400);
+
     }
-
-        return response()->json(['success' => false],400);
-
-}
 }

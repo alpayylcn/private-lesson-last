@@ -55,28 +55,34 @@
     <div class="content-wrapper">
         <!-- Content -->
         <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="col-md-6 col-lg-4 mb-3">
+   <div class="row">
+            <div class="col-md-12 col-lg-6 mb-3">
                 <div class="card">
-                    <div class="card-header">İlan Ver</div>
+                    <div class="card-header"><h3>İlan Ver</h3> </div>
                     <div class="card-body">
+                        <div class="row">
+                            <h3 class="bg-warning text-white border rounded p-4 col-lg-12">Cüzdan Bakiyeniz : <span class="text-danger fs-2">{{$balance}}</span> TL</h3>
+                            {{-- <h3 class="btn btn-primary text-white p-4 col-lg-4 fs-4">Bakiye Yükle </h3> --}}
+                        </div>
                         <form id="advertisementForm">
                             @csrf
-                            <div class="mb-3">
-                                <label class="form-label">Kredi Süresi</label>
+                            <div class="mb-3 mt-3"><hr>
+                                <label class="form-label">Ne Kadar Süreyle İlan Vermek İstiyorsunuz?</label>
                                 <div class="radio-card">
                                     @foreach($durations as $duration)
                                         <div class="card">
                                             <input class="form-check-input" type="radio" name="duration_id" id="duration{{ $duration->id }}" value="{{ $duration->id }}" required>
                                             <label class="form-check-label" for="duration{{ $duration->id }}">
-                                                {{ $duration->duration->name }} ({{ round($duration->credit_amount,0) }} K)
+                                                {{ $duration->name }}<br> ({{ round($duration->price,0) }} TL)
                                             </label>
                                         </div>
                                     @endforeach
                                 </div>
                             </div>
+                            <hr>
                             <div class="mb-3">
-                                <label for="reason" class="form-label">Harcama Nedeni</label>
-                                <select class="form-select" id="reason_id" name="reason_id" required>
+                                {{-- <label for="reason" class="form-label">Harcama Nedeni</label> --}}
+                                <select class="form-select" id="reason_id" hidden name="reason_id" required>
                                     @foreach($reasons as $reason)
                                         <option value="{{ $reason->id }}">{{ $reason->description }}</option>
                                     @endforeach
@@ -85,8 +91,20 @@
                             <button type="submit" class="btn btn-primary btn-wide">İlan Ver</button>
                         </form>
             </div>
+                </div>
+            </div>
+
+        <div class="col-md-12 col-lg-6 mb-3">
+            <div class="card">
+                <div class="card-header"><h3>Aktif İlanlarınız</h3> </div>
+                <div class="card-header">İlan Vermenin Size Faydası Nedir?</div>
+                <div class="card-body">
+                    
+                </div>
             </div>
         </div>
+        </div>
+
     </div>
 @endsection
 

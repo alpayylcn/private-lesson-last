@@ -17,7 +17,7 @@
 <!-- Content -->
 
 <div class="container-xxl flex-grow-1 container-p-y">
-<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Ayarlar /</span> Profil Sayfası</h4>
+
 
 <div class="row">
   <form method="POST" action="{{route('teacher_to_lesson_price.lessonToPriceUpdate')}}" enctype="multipart/form-data">
@@ -25,15 +25,15 @@
     <input type="hidden" name="user_id" value="1">
   <div class="col-md-12">
     <ul class="nav nav-pills flex-column flex-md-row mb-3">
-      
-      
-      <li class="nav-item">
-        <a class="nav-link  active" href="{{route('teachers_profile.lessonPrice')}}"
-          ><i class="bx bx-money  me-1"></i>Ders Talepleri / Öğrenciden</a>
-      
-      
-     
-    </ul>
+      <li class="nav-item m-2">
+          <a class="nav-link  active" href="{{route('lesson.approve.page')}}">
+          <i class="bx bx-money  me-1"></i>Ders Talepleri / Teklife Açık
+      </a>
+      <li class="nav-item m-2">
+          <a class="nav-link  active" href="{{route('teachers_profile.appointment_from_student')}}">
+          <i class="bx bx-money  me-1"></i>Ders Talepleri / İlanlardan Gelen
+      </a>
+  </ul>
     <div class="card mb-4">
       <h5 class="card-header">Öğrenciden Gelen Ders Talepleri</h5>
       <!-- Account -->

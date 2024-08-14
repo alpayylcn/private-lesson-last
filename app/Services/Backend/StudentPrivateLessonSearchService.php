@@ -35,7 +35,7 @@ class StudentPrivateLessonSearchService{
             
         }
         //$stepNumber verisi geliyorsa ve bir sonraki soru 2 yani "hangi sınıf" sorusu "değil" ise işlem yap
-        elseif (!empty($stepNumber) && $stepNumber->rank!=2) {
+        elseif (!empty($stepNumber) && $stepNumber->rank!=2) { 
             
             //$stepNumber dan gelen soru id(question_id) sine göre option ları getirir.
             $stepOption= $this->stepOptionTitleService->getWithWhere(['question_id'=>$stepNumber->id]);
@@ -83,7 +83,13 @@ class StudentPrivateLessonSearchService{
         
     }
     public function updateOrCreateLessonSearch(array $data){
-        
+        if (auth()->user()){
+            $user_id=auth()->user()->id;
+            $statu_type=1;//veritabanına öğrencini kayıtlı olduğu bilgisi yazılacak "statu_type alanına"
+        }else{
+            $user_id=0;
+            $statu_type=0;//veritabanına öğrencini kayıtlı olmadığı bilgisi yazılacak "statu_type alanına"
+        }
         $clientIpAddress=Helper::getIp(); 
         $sessionId = session()->getId();//edge de test edilecek
         
@@ -92,7 +98,7 @@ class StudentPrivateLessonSearchService{
           
             $updateOrCreate = StudentPrivateLessonSearch::updateOrCreate(
                     ['session_id'=>$sessionId, 'step_question_id'=>$data['question_id']],
-                    ['student_ip'=>$clientIpAddress,'step_option_id'=>$data['option_value']]
+                    ['student_ip'=>$clientIpAddress,'step_option_id'=>$data['option_value'],'student_id'=>$user_id,'statu_type'=>$statu_type]
                 );
                 return $updateOrCreate;
             }
