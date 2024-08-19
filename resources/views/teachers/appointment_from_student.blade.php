@@ -26,13 +26,13 @@
   <div class="col-md-12">
     <ul class="nav nav-pills flex-column flex-md-row mb-3">
       <li class="nav-item m-2">
-          <a class="nav-link  active" href="{{route('lesson.approve.page')}}">
-          <i class="bx bx-money  me-1"></i>Ders Talepleri / Teklife Açık
-      </a>
-      <li class="nav-item m-2">
-          <a class="nav-link  active" href="{{route('teachers_profile.appointment_from_student')}}">
-          <i class="bx bx-money  me-1"></i>Ders Talepleri / İlanlardan Gelen
-      </a>
+        <a class="nav-link  active" href="{{ route('lesson.approve.page') }}">
+            <i class="bx bx-alarm  me-1"></i>Ders Talepleri / Teklife Açık
+        </a>
+    <li class="nav-item m-2">
+        <a class="nav-link  active" href="{{ route('teachers_profile.appointment_from_student') }}">
+            <i class="bx bx-line-chart  me-1"></i>Ders Talepleri / İlanlardan Gelen
+        </a>
   </ul>
     <div class="card mb-4">
       <h5 class="card-header">Öğrenciden Gelen Ders Talepleri</h5>
@@ -40,75 +40,56 @@
       
       <hr class="my-0" />
     </div>
-      <div class="col-md-12" >
-          <div class="card mb-4">
-            <div class="card-body mb-3" >
-                <small>Lütfen en kısa zamanda öğrenciniz ile iletişime geçiniz. </small>
-                <div class="table-responsive text-nowrap">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Öğrenci Adı</th>
-                      <th>Öğrenci Soyadı</th>
-                      {{-- <th>Sınıfı</th> --}}
-                      <th>Telefon Numarası</th>
-                    </tr>
-                  </thead>
-                  <tbody class="table-border-bottom-0">
-                @forelse ($appointmentList as $appointment)
-                
-                   @if($appointment->unregistered_student_id)
-                      </tr>
-                        <td><strong>{{$appointment->unregistered_student->name}}</strong></td> 
-                        <td><strong>{{$appointment->unregistered_student->surname}}</strong></td> 
-                        {{-- <td><strong>DDD</strong></td> --}}
-                        <td><strong><button type="button" class="form-control bg-primary text-white">GÖSTER</button></strong></td>
-                      </tr>
-                    
-                    @elseif($appointment->student_id)
-                    
-                      </tr>
-                        <td><strong>{{$appointment->user->name}}</strong></td> 
-                        <td><strong>{{$appointment->user->surname}}</strong></td> 
-                        {{-- <td><strong>DDD</strong></td> --}}
-                        <td><strong><button type="button" class="form-control bg-primary text-white">GÖSTER</button></strong></td>
-                      </tr>
-                    @endif
-                
-                
-                      
-                @empty
-                <td><strong>Şu Anda Herhangi Bir Randevu İsteği Bulunmuyor...</strong></td>
-                @endforelse
-                  
-                
-               
-            </tbody>
-          </table>
-        </div>   
-              </div>
-    </div>
 
-      </div>
-      </div>
-        <div class="card mb-4">
-          <div class="card-body">
-            <div class="mt-2">
-              <button type="submit" id="submit" class="btn btn-primary me-2">KAYDET</button>   
-              <div id="defaultFormControlHelp" class="form-text">
-                Gönder butonuna bastığınızda verdiğiniz bilgilerin doğruluğunu onaylamış olursunuz.
-              </div>
-            </div>
-</form>
-            </div>
+    @forelse ($appointmentList as $appointment)
+    @if($appointment->student_id)
+
+    <div class="col-md-12" id="appointment-{{ $appointment->id }}">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">ÖĞRENCİ: {{$appointment->user->name}} {{$appointment->user->surname}}</h5>
+          <div class="card-subtitle text-muted mb-3">Ders / Sınıf : {{$appointment->lesson->title}} / {{$appointment->class}}</div>
+          <div class="card-subtitle text-muted mb-3">Telefon : {{$appointment->user->userDetails->phone}}</div>
+          <p class="card-text">Öğretmene Not: <br>
+            {{$appointment->note}}
+          </p>
+          <div style="position: relative;">
+          <a href="" class="text-warning">{{$appointment->created_at->locale('tr')->diffForHumans()}}</a>
+          <a href="javascript:void(0)" data-id="{{ $appointment->id }}" class="card-link delete-appointment"style="float: right;">İlanı Kaldır</a>
           </div>
         </div>
-    </div>
-  </div>
+        </div>
+      </div>
+
+    
+      
+
+      @elseif($appointment->unregistered_student_id)
+
+      <div class="col-md-12" >
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">ÖĞRENCİ: {{$appointment->unregistered_student?->name}} {{$appointment->unregistered_student->surname}}</h5>
+            <div class="card-subtitle text-muted mb-3">Ders / Sınıf :</div>
+            <div class="card-subtitle text-muted mb-3">Telefon : </div>
+            <p class="card-text">Öğretmene Not: <br>
+              
+            </p>
+            <a href="javascript:void(0)" data-id="{{ $appointment->id }}" class="card-link delete-appointment">İlanı Kaldır</a>
+          </div>
+          </div>
+        </div>
+      @endif
+      @empty
+      <td><strong>Şu Anda Herhangi Bir Ders İsteği Bulunmuyor...</strong></td>
+      @endforelse
+
+
+      
 @endsection
 
 @section('js')
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
   $(document).ready(function() {
@@ -131,6 +112,45 @@
           });
       });
   });
+
+
+  $(document).on('click', '.delete-appointment', function(e) {
+    e.preventDefault();
+    var appointmentId = $(this).data('id');
+
+    Swal.fire({
+        title: 'Emin misiniz?',
+        text: "Bu ilanı listenizden kaldırmak istediğinizden emin misiniz?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Evet, kaldır!',
+        cancelButtonText: 'Hayır, iptal et'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '{{ route("teacher.appointment.delete") }}',
+                type: 'DELETE',
+                data: {
+                    appointment_id: appointmentId,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        Swal.fire(
+                            'Silindi!',
+                            response.message,
+                            'success'
+                        );
+                        // Randevunun sayfadan kaldırılması
+                        $('#appointment-' + appointmentId).remove();
+                    }
+                }
+            });
+        }
+    });
+});
   </script>
 
 @endsection

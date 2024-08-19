@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('currencies', function (Blueprint $table) {
             $table->id();
             $table->string('title',255)->comment("Para birimleri TL, DOLAR, EURO vs.");
+            $table->string('code',255)->comment("TRY vs.");
             $table->string('icon',255)->comment("Para birimleri simgeleri ₺, $, € vs.");
             $table->integer('add_user_id')->comment("Bu datayı ekleyen Süper adminin id si");
             $table->timestamps();

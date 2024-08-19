@@ -10,7 +10,25 @@ class TeacherAppointmentListService{
 
        
     public function __construct(protected TeacherAppointmentList $teacherAppointmentList){}   
-       
+      
+    public function storeLessonRequest(array $data)
+    {
+        
+        return TeacherAppointmentList::create([
+            'teacher_id' => $data['teacher_id'],
+            'lesson_id' => $data['lesson_id'],
+            'class' => $data['class'],
+            'note' => $data['note'],
+            'student_id' => auth()->id(), // Öğrencinin ID'si
+        ]);
+    }
+    
+    public function deleteAppointment(int $appointmentId)
+    {
+        $appointment = TeacherAppointmentList::findOrFail($appointmentId);
+        $appointment->delete();
+        return true;
+    }
     public function create(array $teacherAppointmentListData){
         
         return $this->teacherAppointmentList->create($teacherAppointmentListData);

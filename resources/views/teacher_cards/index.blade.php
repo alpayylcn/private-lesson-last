@@ -20,21 +20,35 @@
         <div class="container-xxl flex-grow-1 container-p-y">
 
           <div class="row">
+            @forelse ($teachers as $teacher)
             <div class="col-md-6 col-lg-4 mb-3">
               <div class="card">
-                <div class="card-header">Ders Adı</div>
+                <div class="card-header">
+                  <h4>
+                    @php
+                    $uniqueLessons = $teacher->teacherLessons->unique('lesson_id');
+                  @endphp
+                  @foreach ($uniqueLessons as $lesson)
+                    {{$lesson->lesson->title}}
+                  @endforeach  
+                  </h4>
+                 
+                
+                </div>
                 <div class="card-body">
                   <div class="row">
                     <div class="col-4 text-center">
-                      <img src="profile.jpg" class="rounded-circle" alt="Öğretmen Profili" width="50">
-                      <h6 class="mt-2">Öğretmen A.</h6>
+                      <img src="{{asset('backend/assets')}}/img/profileimages/{{$teacher->userDetails->profile_image ?: '/no_image.jpg' }}"class="rounded border border-2 border-warning" alt="Öğretmen Profili" width="100">
+                      <h5 class="mt-2">{{$teacher->name}} {{$teacher->surname}}</h5>
                     </div>
                     <div class="col-8">
-                      <p class="card-text">Kısa Bilgi</p>
-                      <p class="card-text"><small class="text-muted">Şehir: Öğretmenin Şehri</small></p>
+                      <p class="card-text">Geometri ve Türkçe Dersleriniz için sizlere yardımcı olmaya hazırım. Tüm LGS ve YKS öğrencilerini bekliyorum.</p>
+                      <p class="card-text"><i class="menu-icon tf-icons bx bx-map"></i><small class="text-muted">{{$teacher->userDetails->cityName->city }} / {{$teacher->userDetails->countyName->county }}</small></p>
                     </div>
+                    
                   </div>
                 </div>
+                <hr class="my-3 mx-3">
                 <div class="card-footer">
                   <div class="row">
                     <div class="col-6">
@@ -42,65 +56,123 @@
                       <p class="mb-0"><small>(20 yorum)</small></p>
                     </div>
                     <div class="col-6 text-end">
-                      <p class="mb-0">50 TL/Saat</p>
-                      <a href="javascript:void(0)" class="btn btn-primary btn-sm mt-2">Ders Talebi Gönder</a>
+                      <p class="mb-0">{{$teacher->lessonPrices->first()->lesson_face_price}} TL / {{$teacher->lessonPrices->first()->lesson_minute}} dk </p>
+                      <a href="javascript:void(0)" class="btn btn-primary btn-sm mt-2 open-modal" 
+                       data-teacher-id="{{ $teacher->id }}" 
+                       data-lessons="{{ json_encode($teacher->teacherLessons->unique('lesson_id')) }}">
+                        Ders Talebi Gönder
+                    </a>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            @empty
+              
+            @endforelse
+            
           </div>
 
 
         </div>
     </div>
+
+<!-- Ders Talebi Gönder Modalı -->
+<div class="modal fade" id="lessonRequestModal" tabindex="-1" aria-labelledby="lessonRequestModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="lessonRequestModalLabel">Ders Talebi Gönder</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <form id="lessonRequestForm">
+                  @csrf
+                  <input type="hidden" id="teacherId" name="teacher_id">
+
+                  <!-- Dersler için Select Box -->
+                  <div class="mb-3">
+                      <label for="lessonSelect" class="form-label">Ders Seçin</label>
+                      <select id="lessonSelect" name="lesson_id" class="form-select">
+                          <!-- Dersler burada yüklenecek -->
+                      </select>
+                  </div>
+
+                  <!-- Sınıf için input alanı -->
+                  <div class="mb-3">
+                      <label for="classInput" class="form-label">Sınıf</label>
+                      <input type="text" id="classInput" name="class" class="form-control">
+                  </div>
+
+                  <!-- Öğretmene Not için input alanı -->
+                  <div class="mb-3">
+                      <label for="noteInput" class="form-label">Öğretmene Not</label>
+                      <textarea id="noteInput" name="note" class="form-control"></textarea>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary">Ders Talebi Gönder</button>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+
 @endsection
 
 @section('js')
-    {{-- Öğretmen onaylama işlemi --}}
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script>
 
+<script>
+$(document).ready(function() {
+    $('.open-modal').on('click', function() {
+        var teacherId = $(this).data('teacher-id');
+        var lessons = $(this).data('lessons');
 
-    <script>
-        $(document).ready(function() {
-            $(".approve-switch").bootstrapSwitch({
-                onColor: 'success',
-                offColor: 'danger',
-                onText: '<i class="bx bx-check-circle me-1">',
-                offText: '<i class="bx bx-stop-circle me-1"></i>',
-                size: 'small'
-            });
+        // Modal içindeki form alanlarını doldur
+        $('#teacherId').val(teacherId);
 
-            $('.approve-switch').on('switchChange.bootstrapSwitch', function(event, state) {
-                var teacherId = $(this).data('id');
-                var approved = state ? 1 : 0;
-                $.ajax({
-                    url: '{{ route('admin.teacherList.approved') }}',
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        id: teacherId,
-                        approved: approved
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            if (state) {
-                                toastr.success('Öğretmen Onaylandı.');
-                            } else {
-                                toastr.warning('Öğretmen Onayı İptal Edildi.');
-                            }
-                        } else {
-                            toastr.error('Onay işlemi sırasında bir hata oluştu.');
-                        }
-                    },
-                    error: function(xhr) {
-                        console.error(xhr.responseText);
-                        toastr.error('Onay işlemi sırasında bir hata oluştu.');
-                    }
-                });
-            });
+        var lessonSelect = $('#lessonSelect');
+        lessonSelect.empty(); // Önceki seçenekleri temizle
+
+        // Dersleri select box içine ekle
+        $.each(lessons, function(index, lesson) {
+            lessonSelect.append($('<option>', {
+                value: lesson.lesson.id,
+                text: lesson.lesson.title
+            }));
         });
-    </script>
+
+        // Modalı göster
+        $('#lessonRequestModal').modal('show');
+    });
+
+    $('#lessonRequestForm').on('submit', function(e) {
+        e.preventDefault();
+
+        var formData = $(this).serialize();
+
+        $.ajax({
+            url: '{{ route("teacher-appointment.store") }}',
+            method: 'POST',
+            data: formData,
+            success: function(response) {
+                toastr.success('Ders talebi başarıyla gönderildi!');
+                $('#lessonRequestModal').modal('hide');
+                // Gerekiyorsa sayfayı yenile
+                location.reload();
+            },
+            error: function(xhr) {
+                toastr.error('Bir hata oluştu. Lütfen tekrar deneyin.'+xhr.responseText);
+            }
+        });
+    });
+});
+
+</script>
+   
+    
 @endsection

@@ -27,4 +27,11 @@ class LessonRequest extends Model
     {
         return $this->belongsTo(User::class, 'approved_by','id');
     }
+
+    public function teachers()//LessonRequest ile User tablosu arasındaki ilişki. lesson_request_to_teacher tablosu aracılığıyla
+    {
+        return $this->belongsToMany(User::class, 'lesson_request_to_teachers', 'lesson_request_id', 'teacher_id')
+                    ->withPivot('approved')
+                    ->withTimestamps();
+    }
 }

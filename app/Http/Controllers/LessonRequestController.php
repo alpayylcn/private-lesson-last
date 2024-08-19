@@ -34,27 +34,33 @@ class LessonRequestController extends Controller
 
     public function showApprovePage()
     {
-         // Mevcut öğretmenin ID'sini al
+        // Mevcut öğretmenin ID'sini al
     $teacherId = Auth::id();
     
     // Öğretmenin ders taleplerini al
-    $lessonRequests = $this->lessonRequestService->getLessonRequestsForTeacher($teacherId);
-    
+    $lessonRequestsData = $this->lessonRequestService->getLessonRequestsForTeacher($teacherId);
+
+    // Onaylanmış ve onaylanmamış talepler
+    $approvedRequests = $lessonRequestsData['approvedRequests'];
+    $unapprovedRequests = $lessonRequestsData['unapprovedRequests'];
+
     // Tüm session_id'lere göre filtrelenmiş verileri depolamak için bir koleksiyon oluştur
     $studentFiltersCollection = collect();
 
-    // Her bir ders talebi için
-    foreach ($lessonRequests as $request) {
-        // İlgili session_id'ye göre filtrelenmiş verileri al
+    // Onaylanmış talepler için filtreleri alın
+    foreach ($approvedRequests as $request) {
         $studentFilters = $this->studentPrivateLessonSearchService->getWithWhere(['session_id' => $request->session_id]);
+        $studentFiltersCollection = $studentFiltersCollection->concat($studentFilters);
+    }
 
-        // Filtrelenmiş verileri koleksiyona ekle
+    // Onaylanmamış talepler için filtreleri alın
+    foreach ($unapprovedRequests as $request) {
+        $studentFilters = $this->studentPrivateLessonSearchService->getWithWhere(['session_id' => $request->session_id]);
         $studentFiltersCollection = $studentFiltersCollection->concat($studentFilters);
     }
 
     // Verileri Blade şablonuna gönder
-    return view('teachers.appointment_from_admin', compact('lessonRequests', 'studentFiltersCollection'));
-
+    return view('teachers.appointment_from_admin', compact('approvedRequests', 'unapprovedRequests', 'studentFiltersCollection'));
 
     }
 

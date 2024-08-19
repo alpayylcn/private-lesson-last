@@ -10,6 +10,7 @@ use App\Models\Backend\Lesson;
 use App\Models\Backend\LessonRequest;
 use App\Models\Backend\TeacherRequest;
 use App\Services\Backend\TeacherAppointmentListService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TeacherAppointmentListController extends Controller
@@ -20,7 +21,8 @@ class TeacherAppointmentListController extends Controller
         ){}
     public function index()
     {
-        $appointmentList=$this->teacherAppointmentListService->getWithWhere();
+        $user_id=Auth::user()->id;
+        $appointmentList=$this->teacherAppointmentListService->getWithWhere(['teacher_id'=>$user_id]);
         return view('teachers.appointment_from_student',compact('appointmentList'));
     }
     
@@ -31,9 +33,14 @@ class TeacherAppointmentListController extends Controller
         return view('teachers.appointment_from_admin', compact('lessonRequests'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function delete(Request $request)
+    {
+        $appointmentId = $request->input('appointment_id');
+        
+        $this->teacherAppointmentListService->deleteAppointment($appointmentId);
+
+        return response()->json(['success' => true, 'message' => 'Randevu başarıyla silindi.']);
+    }
     public function create()
     {
         
@@ -42,9 +49,20 @@ class TeacherAppointmentListController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTeacherAppointmentListRequest $request)
+    public function store(Request $request)
     {
+        $this->validate($request, [
+            'lesson_id' => 'required|exists:lessons,id',
+            'class' => 'required|string|max:255',
+            'note' => 'nullable|string|max:1000',
+            'teacher_id' => 'required|exists:users,id',
+        ]);
+
+        $data = $request->all();
         
+        $this->teacherAppointmentListService->storeLessonRequest($data);
+
+        return response()->json(['message' => 'Ders talebi başarıyla gönderildi!'], 200);
     }
 
     /**

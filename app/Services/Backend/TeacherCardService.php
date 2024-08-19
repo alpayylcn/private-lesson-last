@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Response;
 
 class TeacherCardService
-{
+{ 
     
     public function spendCredits(User $user, $amount, $reason,  $duration)
     {

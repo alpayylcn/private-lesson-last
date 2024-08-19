@@ -6,7 +6,9 @@ namespace App\Models;
 
 use App\Models\Backend\Lesson;
 use App\Models\Backend\LessonRequest;
+use App\Models\Backend\TeacherAdvertisement;
 use App\Models\Backend\TeacherToLessonAndClass;
+use App\Models\Backend\TeacherToLessonPrice;
 use App\Models\Backend\Wallet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -66,7 +68,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Lesson::class, 'teacher_to_lesson_and_classes', 'user_id', 'lesson_id');
     }
-   
+    public function lessonPrices()
+    {
+        return $this->hasMany(TeacherToLessonPrice::class, 'user_id');
+    }
+     
     public function teacherLessons()
     {
         return $this->hasMany(TeacherToLessonAndClass::class, 'user_id');
@@ -75,5 +81,17 @@ class User extends Authenticatable
     public function hasActiveAdvertisement()
     {
         return $this->userDetails && $this->userDetails->has_advertisement;
+    }
+     
+    public function lessonRequests()//LessonRequest ile User tablosu arasındaki ilişki. lesson_request_to_teacher tablosu aracılığıyla
+    {
+        return $this->belongsToMany(LessonRequest::class, 'lesson_request_to_teachers', 'teacher_id', 'lesson_request_id')
+                    ->withPivot('approved')            
+                    ->withTimestamps();
+    }
+
+    public function advertisements()//İlan sayfası ilişkisi
+    {
+        return $this->hasMany(TeacherAdvertisement::class, 'teacher_id');
     }
 }

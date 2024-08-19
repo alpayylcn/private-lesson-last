@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\Backend\Wallet;
 
 use App\Http\Controllers\Controller;
 use App\Services\Backend\WalletService;
@@ -12,11 +12,7 @@ class WalletController extends Controller
         public function __construct(protected WalletService $walletService){}
     public function index()
     {
-        $index=$this->walletService->getWithWhere(['id'=>1]);
-        if(!empty ($index)){
-
-
-        }
+        
     }
 
     /**
@@ -32,13 +28,17 @@ class WalletController extends Controller
      */
     public function store(Request $request)
     {
-        $store=$this->walletService->create($request->all());
-        if(!empty ($store)){
+        $request->validate([
+            'amount' => 'required|numeric|min:1',
+        ]);
 
+        $wallet = $this->walletService->addMoney($request->amount);
 
-        }
+        return response()->json([
+            'message' => 'Yükleme başarılı!',
+            'balance' => $wallet->balance,
+        ]);
     }
-
     /**
      * Display the specified resource.
      */

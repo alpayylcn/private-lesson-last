@@ -16,6 +16,10 @@ return new class extends Migration
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade')->comment("Öğrencinin randevu istediği Öğretmen");
             $table->foreignId('student_id')->constrained('users')->onDelete('cascade')->nullable()->comment("Randevu isteyen kayıtlı öğrenci");
             $table->foreignId('unregistered_student_id')->constrained('unregistered_student')->onDelete('cascade')->nullable()->comment("Randevu isteyen kayıtsız öğrenci");
+            $table->foreignId('lesson_id')->constrained('lessons')->onDelete('cascade')->nullable()->comment("Hangi dersten randevu aldığı");
+            $table->string('class')->nullable()->comment("Öğrencinin sınıfı ");
+            $table->text('note')->nullable()->comment("öğretmene bilgi notu ");
+            $table->softDeletes();
             $table->timestamps();
         });
     }

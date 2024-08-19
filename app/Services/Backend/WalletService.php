@@ -1,12 +1,42 @@
 <?php
 namespace App\Services\Backend;
+
+use App\Models\Backend\Currency;
 use App\Models\Backend\Wallet;
+use App\Models\Backend\WalletTransaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WalletService{
 
     public function __construct(protected Wallet $wallet){} 
-       
+     
+    
+    public function addMoney($amount)
+    {
+       // Kullanıcının aktif cüzdanını al
+        $wallet = Wallet::firstOrCreate(
+        ['user_id' => Auth::id(), 'is_active' => true],
+        ['balance' => 0]
+    );
+
+    // Para birimini currencies tablosundan alalım
+    $currency = Currency::where('code', 'TRY')->first(); // TRY yerine istediğiniz para birimi kodunu kullanabilirsiniz.
+
+    // Bakiyeyi güncelle
+    $wallet->balance += $amount;
+    $wallet->save();
+
+    // İşlemi kaydet
+    WalletTransaction::create([
+        'wallet_id' => $wallet->id,
+        'amount' => $amount,
+        'transaction_type' => 'deposit',
+        'currency_id' => $currency->id,
+    ]);
+
+    return $wallet;
+    }
     public function create(array $walletData){
 
         return $this->wallet->create($walletData);

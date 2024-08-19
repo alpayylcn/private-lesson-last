@@ -2,6 +2,7 @@
 namespace App\Services\Backend;
 
 use App\Models\Backend\LessonRequest;
+use App\Models\Backend\LessonRequestToTeacher;
 use App\Models\Backend\RequestDuration;
 use App\Models\Backend\TeacherToLessonAndClass;
 use App\Models\Backend\Wallet;
@@ -16,42 +17,73 @@ class LessonRequestService
     {
         $student = Auth::user();
         $sessionId = FacadesSession::getId();
-        $requestDuration=RequestDuration::first();
-        
+        $requestDuration = RequestDuration::first();
+          
         // Öğrenci ders talebini oluştur
         $lessonRequest = LessonRequest::create([
             'student_id' => $student->id,
             'lesson_id' => $lessonId,
-            'session_id'=>$sessionId,
-            'request_duration'=>$requestDuration->duration_days,
+            'session_id' => $sessionId,
+            'request_duration' => $requestDuration->duration_days,
         ]); 
-
+    
         // İlgili dersi veren öğretmenlere talebi gönder
-        $teachers = TeacherToLessonAndClass::where('lesson_id', $lessonId)->get();
-        
-         // Öğretmenlere bildirim gönderme işlemi
-          foreach ($teachers as $teacherLesson) {
-             // Örnek bildirim gönderme işlemi
-             // $teacherLesson->teacher->notify(new LessonRequestedNotification($lessonRequest));
+        $teacherIds = TeacherToLessonAndClass::where('lesson_id', $lessonId)
+            ->pluck('user_id')
+            ->unique(); // Tekil öğretmen ID'leri al
+    
+        foreach ($teacherIds as $teacherId) {
+            $lessonRequest->teachers()->attach($teacherId,['approved' => false]);//lesson_request_to_teachers tablosuna kayıt ekle 'approved' sütununu false olarak ayarlıyoruz
+            // User::find($teacherId)->notify(new LessonRequestedNotification($lessonRequest)); // Öğretmenlere bildirim gönderme işlemi
         }
-        return ['lessonRequest' => $lessonRequest, 'teachers' => $teachers];
+    
+        return ['lessonRequest' => $lessonRequest, 'teacherIds' => $teacherIds];
     }
 
     public function getLessonRequestsForTeacher($teacherId)
     {
+        // Öğretmenin derslerini al
         $teacherLessons = TeacherToLessonAndClass::where('user_id', $teacherId)->pluck('lesson_id')->toArray();
 
+        // lesson_request_to_teachers tablosundaki deleted_at sütununu kontrol ederek lesson_request'leri filtreleyin
+        // Onaylanmış ders taleplerini al
+        $approvedRequestIds = LessonRequestToTeacher::where('teacher_id', $teacherId)
+        ->whereNull('deleted_at')
+        ->where('approved', true) // Onaylanmış talepler
+        ->pluck('lesson_request_id');
+
+        $approvedRequests = LessonRequest::whereIn('id', $approvedRequestIds)
+        ->whereIn('lesson_id', $teacherLessons)
+        ->with('student', 'lesson')
+        ->get();
+
+        // Onaylanmamış ders taleplerini al
+        $unapprovedRequestIds = LessonRequestToTeacher::where('teacher_id', $teacherId)
+            ->whereNull('deleted_at')
+            ->where('approved', false) // Onaylanmamış talepler
+            ->pluck('lesson_request_id');
+
+        $unapprovedRequests = LessonRequest::whereIn('id', $unapprovedRequestIds)
+            ->whereIn('lesson_id', $teacherLessons)
+            ->with('student', 'lesson')
+            ->get();
        
-        $lessonRequest = LessonRequest::whereIn('lesson_id', $teacherLessons)->with('student', 'lesson')->get();
-        // Her bir ders talebi için gereken kredi miktarını hesaplayın
-        foreach ($lessonRequest as $request) {
+          // Ders taleplerinin her biri için ek verileri işleyin
+        $approvedRequests->each(function ($request) {
             $request->required_credits = $this->getApprovalCost($request->approval_count);
             $request->formatted_request_time = Carbon::parse($request->created_at)->locale('tr')->diffForHumans();
+        });
 
-            
-        }
-        // Talep zamanını formatlayın
-          return $lessonRequest;
+        $unapprovedRequests->each(function ($request) {
+            $request->required_credits = $this->getApprovalCost($request->approval_count);
+            $request->formatted_request_time = Carbon::parse($request->created_at)->locale('tr')->diffForHumans();
+        });
+
+        // İki farklı listeyi döndür
+        return [
+            'approvedRequests' => $approvedRequests,
+            'unapprovedRequests' => $unapprovedRequests
+        ];
     }
 
     public function getLessonRequestsForStudent(int $studentId)
@@ -95,12 +127,17 @@ class LessonRequestService
         $approvedTeachers = json_decode($lessonRequest->approved_teachers, true) ?? [];
 
         // Öğretmenin zaten onaylayıp onaylamadığını kontrol et
-        if (in_array($teacherId, $approvedTeachers)) {
-            return response()->json([
-                'status' => 400,
-                'message' => 'Bu dersi zaten onayladınız.'
-            ], 400);
-        }
+        $existingApproval = $lessonRequest->teachers()
+        ->wherePivot('teacher_id', $teacherId)
+        ->wherePivot('approved', true)
+        ->exists();
+
+        if ($existingApproval) {
+        return response()->json([
+            'status' => 400,
+            'message' => 'Bu dersi zaten onayladınız.'
+        ], 400);
+}
 
         // Öğretmenin cüzdanını kontrol et
         $wallet = Wallet::where('user_id', $teacherId)->first();
@@ -117,10 +154,13 @@ class LessonRequestService
         $wallet->save();
 
         // Talebi onaylama işlemi
-        $approvedTeachers[] = $teacherId;
-        $lessonRequest->approved_teachers = json_encode($approvedTeachers);
-        $lessonRequest->approval_count = count($approvedTeachers);
-        $lessonRequest->status = 'approved'; // Onaylı olarak işaretle
+        $lessonRequest->teachers()->updateExistingPivot($teacherId, ['approved' => true]);
+        // Onay sayısını güncelle
+        $lessonRequest->approval_count = $lessonRequest->teachers()->wherePivot('approved', true)->count();
+    
+        // Tek bir onay alsa bile talebi "approved" olarak işaretle
+        $lessonRequest->status = 'approved';
+    
         $lessonRequest->save();
    
         // Öğrenci telefon numarası bilgisi

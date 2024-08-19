@@ -18,11 +18,11 @@
             <!-- Existing Durations Table -->
             <div class="col-lg-6">
                 <div class="bg-white p-5 rounded-md shadow-sm">
-                    <h3 class="text-2xl font-bold mb-2">İlan ve Teklif Seçenekleri</h3>
+                    <h3 class="text-2xl font-bold mb-2">İlan Seçenekleri</h3>
                     <table class=" table table-auto w-full" id="durations-table">
                         <thead>
                             <tr>
-                                <th>İlan / Teklif Adı</th>
+                                <th>İlan Adı</th>
                                 <th>Gün Sayısı</th>
                                 <th>Ücret</th>
                                 <th>İşlem</th>
@@ -51,14 +51,14 @@
             <!-- Create/Edit Duration Form -->
             <div class="col-lg-6">
                 <div class="bg-white p-5 rounded-md shadow-sm">
-                    <h3 class="text-2xl font-bold mb-2" id="form-title">Yeni İlan / Teklif Ekle</h3>
+                    <h3 class="text-2xl font-bold mb-2" id="form-title">Yeni İlan Ekle</h3>
 
                     <form id="duration-form">
                         @csrf
                         <input type="hidden" id="duration-id">
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold " for="name">
-                                İlan / Teklif Adı:
+                                İlan Adı:
                             </label><br>
                             <input type="text" name="name" id="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                         </div>
@@ -143,7 +143,7 @@
                     }
 
                     $('#duration-form')[0].reset();
-                    $('#form-title').text('Yeni İlan / Teklif Ekle');
+                    $('#form-title').text('Yeni İlan Ekle');
                     $('#duration-id').val('');
                 },
                 error: function() {
@@ -195,7 +195,7 @@
                                 $('tr[data-id="'+id+'"]').remove();
                                 Swal.fire(
                                     'Silindi!',
-                                    'İlan/Teklif Bilgileri Silindi.',
+                                    'İlan Bilgileri Silindi.',
                                     'Başarılı'
                                 );
                             } else {

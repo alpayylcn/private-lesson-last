@@ -36,25 +36,10 @@
       <li class="menu-header small text-uppercase">
         <span class="menu-header-text">ÖĞRETMEN</span>
       </li>
-      <li class="menu-item">
-        <a href="" class="menu-link menu-toggle">
-          <i class="menu-icon tf-icons bx bx-dock-top"></i>
-          <div data-i18n="Account Settings">Gelen Ders Talepleri</div>
-        </a>
-        <ul class="menu-sub">
-          <li class="menu-item">
-            <a href="{{route('teachers_profile.appointment_from_student')}}" class="menu-link">
-              <div data-i18n="Account">İlanlardan Gelen Talepler</div>
-            </a>
-          </li>
-          <li class="menu-item">
-            <a href="{{route('lesson.approve.page')}}" class="menu-link">
-              <div data-i18n="Notifications">Teklife Açık Talepler  </div>
-            </a>
-          </li>
-          
-        </ul>
-      </li>
+      
+
+
+      
       @endrole
       @role('Student')
       <li class="menu-header small text-uppercase">
@@ -72,12 +57,38 @@
       
       @role('Teacher')
       <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">GELEN DERS TALEPLERİ</span>
+      </li>
+      <li class="menu-item">
+        <a href="{{route('teachers_profile.appointment_from_student')}}"class="menu-link">
+          <i class="menu-icon tf-icons bx bx-line-chart"></i>
+          <div data-i18n="Support">İlanlardan Gelen Talepler</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="{{route('lesson.approve.page')}}"class="menu-link">
+          <i class="menu-icon tf-icons bx bx-alarm"></i>
+          <div data-i18n="Support">Teklife Açık Talepler</div>
+        </a>
+      </li>
+
+      <li class="menu-header small text-uppercase">
         <span class="menu-header-text">İLAN</span>
       </li>
       <li class="menu-item">
         <a href="{{route('advertisement.create')}}"class="menu-link">
           <i class="menu-icon tf-icons bx bx-line-chart"></i>
           <div data-i18n="Support">İlan Ver</div>
+        </a>
+      </li>
+
+      <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">CÜZDAN</span>
+      </li>
+      <li class="menu-item">
+        <a href="{{route('advertisement.create')}}"class="menu-link">
+          <i class="menu-icon tf-icons bx bx-money"></i>
+          <div data-i18n="Support">TL Yükle</div>
         </a>
       </li>
       @endrole
@@ -183,13 +194,13 @@
       <li class="menu-item">
         <a href="{{route('durations.index')}}" class="menu-link">
           <i class="menu-icon tf-icons bx bx-money"></i>
-          <div data-i18n="Tables">İlan Başlıkları</div>
+          <div data-i18n="Tables">İlan Ücretleri</div>
         </a>
       </li>
       <li class="menu-item">
         <a href="{{route('admin.credit-settings.edit')}}" class="menu-link">
           <i class="menu-icon tf-icons bx bx-money"></i>
-          <div data-i18n="Tables">Kredi Miktarları</div>
+          <div data-i18n="Tables">Teklif Ücretleri</div>
         </a>
       </li>
       <li class="menu-item">

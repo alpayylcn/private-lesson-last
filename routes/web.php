@@ -23,7 +23,7 @@ use App\Http\Controllers\Backend\Teacher\TeacherSkilController;
 use App\Http\Controllers\Backend\Teacher\TeacherToLessonPriceController;
 use App\Http\Controllers\Backend\UnregisteredStudentController;
 use App\Http\Controllers\Backend\WalletAddedMoneyController;
-use App\Http\Controllers\Backend\WalletController;
+use App\Http\Controllers\Backend\Wallet\WalletController;
 use App\Http\Controllers\Backend\WalletSpentMoneyController;
 use App\Http\Controllers\Backend\WalletTransactionController;
 use App\Http\Controllers\Backend\WalletTransactionTypeController;
@@ -33,13 +33,17 @@ use App\Http\Controllers\Backend\Admin\RequestDurationController;
 use App\Http\Controllers\Backend\Admin\StudentListController;
 use App\Http\Controllers\Backend\Admin\TeacherListController;
 use App\Http\Controllers\Backend\Student\LessonRequestListController;
+use App\Http\Controllers\Backend\Teacher\TeacherAdvertisementController;
 use App\Http\Controllers\Backend\Teacher\TeacherAppointmentListController;
+
 use App\Http\Controllers\DurationController;
 use App\Http\Controllers\LessonRequestController;
+use App\Http\Controllers\LessonRequestToTeacherController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\StepQuestionController;
 use App\Http\Controllers\TeacherCardController;
 use App\Http\Controllers\UserDetailController;
+use App\Models\Backend\LessonRequestToTeacher;
 use App\Models\Backend\TeacherAppointmentList;
 use Illuminate\Support\Facades\Route;
 
@@ -69,7 +73,15 @@ Route::get('/lesson-approve', [LessonRequestController::class, 'showApprovePage'
 Route::post('/lesson-request', [LessonRequestController::class, 'requestLesson'])->name('lesson.request');
 Route::post('/lesson-approve', [LessonRequestController::class, 'approveRequest'])->name('lesson.approve.ajax');
 
+Route::middleware('auth')->group(function () {
+//Wallet para yükleme işlemleri  
+Route::post('/add-money', [WalletController::class, 'store'])->name('add.money.store');
 
+
+//Öğrenci doğrudan öğretmene talep gönderiyor   
+Route::post('/teacher-appointment', [TeacherAppointmentListController::class, 'store'])->name('teacher-appointment.store');
+
+});
 
 Route::resources([
     'classes' =>ClassController::class,
@@ -150,7 +162,7 @@ Route::post('teachers_profile_update_lessons',[TeacherDetailsController::class,'
 //Teacher Appointments
 Route::get('appointment_from_student',[TeacherAppointmentListController::class,'index'])->name('teachers_profile.appointment_from_student');
 Route::get('appointment_from_admin',[TeacherAppointmentListController::class,'fromAdmin'])->name('teachers_profile.appointment_from_admin');
-// Öğrenci ders isteği oluşturma
+Route::delete('/appointment/delete', [TeacherAppointmentListController::class, 'delete'])->name('teacher.appointment.delete');
 
 
 
@@ -248,10 +260,14 @@ Route::get('teacher_cards',[TeacherCardController::class,'index'])->name('teache
 // İlan verme formu ve ilan verme işlemleri için rotalar
     Route::middleware(['auth', 'role:Teacher'])->group(function () {
     // İlan verme formunu göster
-    Route::get('/advertisement/create', [TeacherCardController::class, 'showCreateAdvertisementForm'])->name('advertisement.create');
+    Route::get('/advertisement/create', [TeacherAdvertisementController::class, 'showCreateAdvertisementForm'])->name('advertisement.create');
 
     // İlan verme işlemini yap
-    Route::post('/advertisement/spend-credits', [TeacherCardController::class, 'spendCredits'])->name('teachers.spend-credits');
+    Route::post('/advertisement/spend-credits', [TeacherAdvertisementController::class, 'spendCredits'])->name('teachers.spend-credits');
+    
+    // Öğretmen panelinden öğrencinin verdiği ilanı kaldır
+    Route::post('/lesson-request/remove-teacher', [LessonRequestToTeacherController::class, 'removeTeacher'])->name('lesson-request.remove.teacher');
+
 });
 
 
@@ -261,3 +277,4 @@ Route::middleware(['auth', 'role:Super-Admin'])->group(function () {
     Route::get('/admin/credit-settings', [CreditSettingController::class, 'edit'])->name('admin.credit-settings.edit');
     Route::put('/admin/credit-settings', [CreditSettingController::class, 'update'])->name('admin.credit-settings.update');
 });
+

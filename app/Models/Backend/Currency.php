@@ -15,13 +15,14 @@ class Currency extends Model
 {
     use HasFactory,SoftDeletes;
     public $timestamps = true;
-    protected $table = 'currrincies';
+    protected $table = 'currencies';
     protected $casts = [
         'created_at' => 'datetime:Y-m-d',
         'updated_at' => 'datetime:Y-m-d'
     ];
     protected $fillable = [
         'title',
+        'code',
         'icon',
         'add_user_id'];
 
