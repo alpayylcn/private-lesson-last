@@ -31,7 +31,7 @@
                             <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab"
                                 data-bs-target="#navs-justified-home" aria-controls="navs-justified-home"
                                 aria-selected="true">
-                                <i class="tf-icons bx bx-calendar-edit"></i> Onaylanmamış Talepler
+                                <i class="tf-icons bx bx-calendar-edit"></i> Teklif Verilmeyen Talepler
                                 <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger">{{ $unapprovedRequests->count() }}</span>
                             </button>
                         </li>
@@ -39,7 +39,7 @@
                             <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
                                 data-bs-target="#navs-justified-profile" aria-controls="navs-justified-profile"
                                 aria-selected="false">
-                                <i class="tf-icons bx bx-calendar-check"></i> Onaylanmış Talepler
+                                <i class="tf-icons bx bx-calendar-check"></i> Teklif Verilen Talepler
                                 <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger">{{ $approvedRequests->count() }}</span>
                             </button>
                         </li>
@@ -98,13 +98,15 @@
                                                     </div>
 
                                                     <button type="button" class="btn btn-success"
-                                                        disabled>Onaylandı</button>
+                                                        disabled>Teklif Verildi</button>
                                                 @elseif ($request->approval_count >= 5)
                                                     <button type="button" class="btn btn-success" disabled>Onay Sınırına
                                                         Ulaşıldı</button>
                                                 @else
                                                     <button type="button" class="btn btn-info approve-btn"
-                                                        data-request-id="{{ $request->id }}">Talebi Onayla / <small
+                                                        data-request-id="{{ $request->id }}"
+                                                         data-required-credits="{{ $request->required_credits }}"
+                                                        >Talebi Onayla / <small
                                                             class="badge bg-primary text-wra">{{ $request->required_credits }}
                                                             TL</small> </button>
                                                 @endif
@@ -175,13 +177,15 @@
                                                     </div>
 
                                                     <button type="button" class="btn btn-success"
-                                                        disabled>Onaylandı</button>
+                                                        disabled>Teklif Verildi</button>
                                                 @elseif ($request->approval_count >= 5)
                                                     <button type="button" class="btn btn-success" disabled>Onay Sınırına
                                                         Ulaşıldı</button>
                                                 @else
                                                     <button type="button" class="btn btn-info approve-btn"
-                                                        data-request-id="{{ $request->id }}">Talebi Onayla / <small
+                                                        data-request-id="{{ $request->id }}" 
+                                                        data-required-credits="{{ $request->required_credits }}">
+                                                        Talebi Onayla / <small>
                                                             class="badge bg-primary text-wra">{{ $request->required_credits }}
                                                             TL</small> </button>
                                                 @endif
@@ -216,6 +220,7 @@
                 var button = $(this);
                 var card = button.closest('.lesson-request');
                 var requestId = button.data('request-id');
+                var requiredCredits = button.data('required-credits');
 
                 // Onaylama işlemi başlatılıyor
                 $.ajax({
@@ -223,6 +228,8 @@
                     method: 'POST',
                     data: {
                         request_id: requestId,
+                        required_credits: requiredCredits,
+
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {

@@ -66,8 +66,9 @@ class LessonRequestController extends Controller
 
     public function approveRequest(Request $request)
     {
+        //dd($request);
         $requestId = $request->input('request_id');
-        $response = $this->lessonRequestService->approveRequest($requestId);
+        $response = $this->lessonRequestService->approveRequest($request);
 
     return response()->json($response->original, $response->getStatusCode());
     }

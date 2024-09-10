@@ -130,7 +130,7 @@
 $(document).ready(function() {
     $('.open-modal').on('click', function() {
         var teacherId = $(this).data('teacher-id');
-        var lessons = $(this).data('lessons');
+        var lessons = $(this).data('lessons'); 
 
         // Modal içindeki form alanlarını doldur
         $('#teacherId').val(teacherId);

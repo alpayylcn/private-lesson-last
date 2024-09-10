@@ -1,35 +1,33 @@
 <?php
 namespace App\Services\Backend;
 
+use App\Models\Backend\Duration;
 use App\Models\Backend\RequestDuration;
 use Illuminate\Http\Request;
 
 class RequestDurationService
 {
-    public function getAllDurations()
+    
+
+    public function firstDuration()
     {
-        return RequestDuration::all();
+        return RequestDuration::first();
+    }
+   
+
+
+    public function updateRequestDuration(int $durationId,int $durationDays)
+    {
+        $duration = RequestDuration::find($durationId);
+        if ($duration) {
+            $duration->duration_days = $durationDays;
+            $duration->save();
+            return true;
+        }
+        return false;
     }
 
-    public function createDuration(Request $request)
-    {
-        $validated = $request->validate([
-            'request_type' => 'required|string|max:255',
-            'duration_days' => 'required|integer|min:1',
-        ]);
-
-        return RequestDuration::create($validated);
-    }
-
-    public function updateDuration(Request $request, RequestDuration $requestDuration)
-    {
-        $validated = $request->validate([
-            'request_type' => 'required|string|max:255',
-            'duration_days' => 'required|integer|min:1',
-        ]);
-
-        return $requestDuration->update($validated);
-    }
+    
 
     public function deleteDuration(RequestDuration $requestDuration)
     {

@@ -35,4 +35,8 @@ class Classes extends Model
         {
             return $this->teacher_to_classes()->exists();
         }   
+        public function teacherToLessonAndClasses()
+    {
+        return $this->hasMany(TeacherToLessonAndClass::class, 'class_id', 'id');
+    }
 }

@@ -22,7 +22,7 @@ class UserService{
             });
         }
 
-        return $query->paginate(1);//bir sayfada bulunacak satır sayısı
+        return $query->paginate(10);//bir sayfada bulunacak satır sayısı
     }
 
     public function countTeachers()

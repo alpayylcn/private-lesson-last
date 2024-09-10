@@ -24,7 +24,12 @@ class StudentPrivateLessonSearchService{
         ){}
         
           
-       
+    public function studentChooseLesson (int $studedntId){
+        return StudentPrivateLessonSearch::where('step_question_id', 1)->where('student_id',$studedntId)->first()->step_option_id;
+    }   
+    public function studentChooseClass (int $studedntId){
+        return StudentPrivateLessonSearch::where('step_question_id', 2)->where('student_id',$studedntId)->first()->step_option_id;
+    } 
     public function lessonSearchFilters(array $data){
         
         $stepNumber=$this->stepQuestionService->whereRank($data['question_rank']);

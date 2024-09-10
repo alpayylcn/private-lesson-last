@@ -14,13 +14,7 @@ class DurationService
 
     public function createDuration(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'days' => 'required|integer',
-            'price' => 'required|numeric',
-        ]);
-
-        return Duration::create($request->all());
+       return Duration::create($request->all());
     }
 
     public function getDurationById($id)

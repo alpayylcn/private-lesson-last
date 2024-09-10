@@ -49,4 +49,8 @@ class Lesson extends Model
         {
             return $this->hasMany(TeacherToLessonAndClass::class);
         }
+        public function teacherToLessonAndClasses()
+        {
+            return $this->hasMany(TeacherToLessonAndClass::class, 'lesson_id', 'id');
+        }
 }

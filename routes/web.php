@@ -28,11 +28,14 @@ use App\Http\Controllers\Backend\WalletSpentMoneyController;
 use App\Http\Controllers\Backend\WalletTransactionController;
 use App\Http\Controllers\Backend\WalletTransactionTypeController;
 use App\Http\Controllers\Backend\Admin\AdminController;
+use App\Http\Controllers\Backend\Admin\CreditGiftForTeacherController;
 use App\Http\Controllers\Backend\Admin\CreditSettingController;
 use App\Http\Controllers\Backend\Admin\RequestDurationController;
 use App\Http\Controllers\Backend\Admin\StudentListController;
 use App\Http\Controllers\Backend\Admin\TeacherListController;
+use App\Http\Controllers\Backend\Admin\TeacherOfferOrderAndPriceController;
 use App\Http\Controllers\Backend\Student\LessonRequestListController;
+use App\Http\Controllers\Backend\SystemSettings\SystemSettingsController;
 use App\Http\Controllers\Backend\Teacher\TeacherAdvertisementController;
 use App\Http\Controllers\Backend\Teacher\TeacherAppointmentListController;
 
@@ -114,6 +117,7 @@ Route::post('all_step_filter_end',[FilterStudentSearchTeacherController::class,'
 Route::post('all_step_filter_create',[FilterStudentSearchTeacherController::class,'stepCreate'])->name('all_step_filter.stepCreate');
 Route::post('all_step_filter_update',[FilterStudentSearchTeacherController::class,'stepUpdate'])->name('all_step_filter.stepUpdate');
 Route::resource('all_step_filter',FilterStudentSearchTeacherController::class,['names' => ['index'=>'all_step_filter']])->middleware('renew.session');
+Route::get('choose_teacher',[TeacherCardController::class,'chooseTheTeacher'])->middleware('auth')->name('teacher_cards.chooseTheTeacher');
 
 // Öğrencinin açtığı ilanların listesi.
 Route::get('lesson_request_list',[LessonRequestListController::class,'index'])->name('lesson_request_list.index');
@@ -169,6 +173,16 @@ Route::delete('/appointment/delete', [TeacherAppointmentListController::class, '
 });
 
 Route::middleware('role:Super-Admin')->group(function () { 
+//system_settings route Start
+Route::get('/system/settings',[SystemSettingsController::class,'index'])->name('admin.systemSettings.index');
+Route::post('/admin/request-duration/update',[SystemSettingsController::class,'updateRequestDuration'])->name('admin.requestDuration.update');
+Route::post('/admin/deposit-limit/update',[SystemSettingsController::class,'updateDepositLimit'])->name('admin.depositLimit.update');
+
+
+Route::post('/teacher-offer-order-and-prices', [TeacherOfferOrderAndPriceController::class, 'store'])->name('teacher_offer_order_and_prices.store');
+Route::delete('/teacher-offer-order-and-prices', [TeacherOfferOrderAndPriceController::class, 'destroy'])->name('teacher_offer_order_and_prices.destroy');
+Route::put('/teacher-offer-order-and-prices/{id}', [TeacherOfferOrderAndPriceController::class, 'update'])->name('teacher_offer_order_and_prices.update');
+//system_settings route End
 
 //Teacher List Route Start
 Route::get('teacher_list',[TeacherListController::class,'index'])->name('admin.teacherList');
@@ -176,6 +190,11 @@ Route::post('/teachers/approve', [TeacherListController::class, 'approve'])->nam
 Route::get('/students', [StudentListController::class, 'index'])->name('admin.studentList');
 Route::post('/students/approve', [StudentListController::class, 'approve'])->name('admin.studentList.approved');
 //Teacher List Route End
+
+//Credit Gift For Teacher Start
+Route::get('/admin/credit_gift', [CreditGiftForTeacherController::class, 'index'])->name('admin.credit.gift');
+Route::post('/admin/credit_gift/addMoney', [CreditGiftForTeacherController::class, 'addMoney'])->name('admin.credit.gift.add.money');
+//Credit Gift For Teacher End
 
 
 //Lessons Route Section Start
@@ -237,12 +256,12 @@ Route::delete('/durations/{id}', [DurationController::class, 'destroy'])->name('
 
 });
 
-//Admin Route Section Start
+//Admin Route Section Start 
 Route::get('admin_dashboard',[AdminController::class,'index'])->name('admin_dashboard.index');
 
-    //Request Duration route Start
-    Route::resource('request_durations', RequestDurationController::class);
-    //Request Duration route End
+//Request Duration route Start  
+Route::resource('request_durations', RequestDurationController::class);
+//Request Duration route End
 
 //Admin Route Section End
 
@@ -254,7 +273,7 @@ Route::post('api/fetch-county',[UserDetailController::class,'fetchCounty'])->nam
 
 });
 //Teacher Cards Business Route Section Start
-Route::get('teacher_cards',[TeacherCardController::class,'index'])->name('teacher_cards.index');
+Route::get('teacher_cards',[TeacherCardController::class,'index'])->middleware('auth')->name('teacher_cards.index');
 //Teacher Cards Business Route Section End
 
 // İlan verme formu ve ilan verme işlemleri için rotalar

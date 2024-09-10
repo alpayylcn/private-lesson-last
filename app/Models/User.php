@@ -9,6 +9,7 @@ use App\Models\Backend\LessonRequest;
 use App\Models\Backend\TeacherAdvertisement;
 use App\Models\Backend\TeacherToLessonAndClass;
 use App\Models\Backend\TeacherToLessonPrice;
+use App\Models\Backend\TeacherToLocation;
 use App\Models\Backend\Wallet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -78,6 +79,14 @@ class User extends Authenticatable
         return $this->hasMany(TeacherToLessonAndClass::class, 'user_id');
     }
 
+    public function teacherToLessonAndClasses()
+    {
+        return $this->hasMany(TeacherToLessonAndClass::class, 'user_id', 'id');
+    }
+    public function teacherToLocations()
+    {
+        return $this->hasMany(TeacherToLocation::class, 'user_id', 'id');
+    }
     public function hasActiveAdvertisement()
     {
         return $this->userDetails && $this->userDetails->has_advertisement;

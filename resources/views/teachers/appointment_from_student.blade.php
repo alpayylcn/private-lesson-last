@@ -47,19 +47,27 @@
     <div class="col-md-12" id="appointment-{{ $appointment->id }}">
       <div class="card mb-4">
         <div class="card-body">
-          <h5 class="card-title">ÖĞRENCİ: {{$appointment->user->name}} {{$appointment->user->surname}}</h5>
-          <div class="card-subtitle text-muted mb-3">Ders / Sınıf : {{$appointment->lesson->title}} / {{$appointment->class}}</div>
-          <div class="card-subtitle text-muted mb-3">Telefon : {{$appointment->user->userDetails->phone}}</div>
-          <p class="card-text">Öğretmene Not: <br>
-            {{$appointment->note}}
-          </p>
-          <div style="position: relative;">
-          <a href="" class="text-warning">{{$appointment->created_at->locale('tr')->diffForHumans()}}</a>
-          <a href="javascript:void(0)" data-id="{{ $appointment->id }}" class="card-link delete-appointment"style="float: right;">İlanı Kaldır</a>
+          <div class="row">
+            <div class="col-md-6 rounded shadow-sm">
+              <h5 class="card-title mt-2">ÖĞRENCİ: {{$appointment->user->name}} {{$appointment->user->surname}}</h5>
+              <div class="card-subtitle text-muted mb-3">Ders / Sınıf : {{$appointment->lesson->title}} / {{$appointment->class}}</div>
+              <div class="card-subtitle text-muted mb-3">Telefon : {{$appointment->user->userDetails->phone}}</div>
+            </div>
+            <div class="col-md-6 rounded shadow-sm">
+              <p class="card-text mt-2"><b>Öğretmene Not: </b><br>{{$appointment->note}}</p>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <a href="" class="text-warning">Talep Zamanı: {{$appointment->created_at->locale('tr')->diffForHumans()}}</a>
+            </div>
+            <div class="col-md-6 text-right">
+              <a href="javascript:void(0)" data-id="{{ $appointment->id }}" class="btn btn-danger delete-appointment"style="float: right;">İlanı Kaldır</a>
+            </div>
           </div>
         </div>
-        </div>
       </div>
+    </div>
 
     
       
@@ -81,7 +89,13 @@
         </div>
       @endif
       @empty
+      <div class="col-md-12" >
+        <div class="card mb-4 bg-warning">
+          <div class="card-body">
       <td><strong>Şu Anda Herhangi Bir Ders İsteği Bulunmuyor...</strong></td>
+    </div>
+  </div>
+</div>
       @endforelse
 
 

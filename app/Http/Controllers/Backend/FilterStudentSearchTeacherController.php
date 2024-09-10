@@ -60,9 +60,10 @@ class FilterStudentSearchTeacherController extends Controller
             $typeData=$this->stepOptionTitleService->first(['question_id'=>$request->question_id,'option_id'=>$request->option_value]);
             if($typeData->title=="Öğretmen Beni Arasın"){
                return $this->searchEnd($request);
-            }else{
-                $teacherListData = $this->studentPrivateLessonSearchService->lessonSearchFiltersTeacherList($request->all());
-                return view('filter_lesson.filter_teacher_list', compact('teacherListData'));
+            }else{//Öğretmeni ben seçeceğim
+                return redirect()->route('teacher_cards.chooseTheTeacher');
+                // $teacherListData = $this->studentPrivateLessonSearchService->lessonSearchFiltersTeacherList($request->all());
+                // return view('filter_lesson.filter_teacher_list', compact('teacherListData'));
             }
         }else{
             toastr()->warning('Güncelleme Yapılamadı', 'İşlem Hatası', ["positionClass" => "toast-top-right"]);
@@ -74,6 +75,7 @@ class FilterStudentSearchTeacherController extends Controller
         if (auth()->user()) { // Öğrenci kayıtlı ise
            $studentFilters = $this->studentPrivateLessonSearchService->getWithWhere(['session_id' => session()->getId()]);
             if (!empty($request->select_teacher_id)) { // Öğretmen listeden seçildi ise "Öğretmeni ben seçeceğim"
+                
                 $selectTeacherId = $request->select_teacher_id;
                 $teacherAppointmentListStore = $this->teacherAppointmentListService->create(['student_id' => auth()->user()->id, 'teacher_id' => $request->select_teacher_id]);
             }else{//Öğretmen beni arasın
@@ -85,7 +87,7 @@ class FilterStudentSearchTeacherController extends Controller
             return redirect()->route('lesson_request_list.index');
             //return view('filter_lesson.filter_lesson_search_end', compact('studentFilters'));
 
-        } else {
+        } else { 
             if (!empty($request->select_teacher_id)) {
                 $selectTeacherId = $request->select_teacher_id;
             } else {

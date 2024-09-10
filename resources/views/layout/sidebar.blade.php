@@ -183,12 +183,20 @@
       <li class="menu-header small text-uppercase"><span class="menu-header-text">Öğrenciler</span></li>
       
       <li class="menu-item">
-        <a href="{{route('request_durations.index')}}" class="menu-link">
-          <i class="menu-icon tf-icons bx bx-detail"></i>
-          <div data-i18n="Basic">Öğrenci İlan Süreleri</div>
+        <a href="" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-user-check"></i>
+          <div data-i18n="Basic">Öğrenci Onayla</div>
         </a>
       </li>
-     
+     <!-- Sistem Ayarları -->
+     <li class="menu-header small text-uppercase"><span class="menu-header-text">Sistem Ayarları</span></li>
+      
+     <li class="menu-item">
+       <a href="{{route('admin.systemSettings.index')}}" class="menu-link">
+         <i class="menu-icon tf-icons bx bx-detail"></i>
+         <div data-i18n="Basic">Sistem Ayarları</div>
+       </a>
+     </li>
       <!-- Cüzdan -->
       <li class="menu-header small text-uppercase"><span class="menu-header-text">Cüzdan</span></li>
       <li class="menu-item">
@@ -204,7 +212,7 @@
         </a>
       </li>
       <li class="menu-item">
-        <a href="tables-basic.html" class="menu-link">
+        <a href="{{route('admin.credit.gift')}}" class="menu-link">
           <i class="menu-icon tf-icons bx bx-money"></i>
           <div data-i18n="Tables">Kredi Hediye Et</div>
         </a>

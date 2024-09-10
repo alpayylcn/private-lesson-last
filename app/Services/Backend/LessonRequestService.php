@@ -108,13 +108,13 @@ class LessonRequestService
 
         return ['success' => false, 'message' => 'Talep iptal edilemedi.'];
     }
-
-    public function approveRequest($requestId)
-    {
+ 
+    public function approveRequest($request)
+    {   //dd($request);
         $teacherId = Auth::id();
 
         // Talebi bul ve onay sayısını kontrol et
-        $lessonRequest = LessonRequest::find($requestId);
+        $lessonRequest = LessonRequest::find($request->request_id);
 
         if ($lessonRequest->approval_count >= 5) {
             return response()->json([
@@ -141,7 +141,8 @@ class LessonRequestService
 
         // Öğretmenin cüzdanını kontrol et
         $wallet = Wallet::where('user_id', $teacherId)->first();
-        $requiredCredits = $this->getApprovalCost($lessonRequest->approval_count);
+        //$requiredCredits = $this->getApprovalCost($lessonRequest->approval_count); değerleri fonsiyondan alıyor
+        $requiredCredits=$request->required_credits; //değerler blade den geliyor.
         if (!$wallet || $wallet->balance < $requiredCredits) {
             return response()->json([
                 'status' => 400,

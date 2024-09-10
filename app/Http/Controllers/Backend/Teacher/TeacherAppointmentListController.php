@@ -50,7 +50,7 @@ class TeacherAppointmentListController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {   dd($request);
         $this->validate($request, [
             'lesson_id' => 'required|exists:lessons,id',
             'class' => 'required|string|max:255',

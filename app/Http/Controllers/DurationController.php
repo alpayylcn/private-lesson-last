@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Backend\Durations\DurationRequest;
 use App\Models\Backend\Duration;
 use App\Services\Backend\DurationService;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class DurationController extends Controller
         return view('admin.durations.index', compact('durations'));
     }
 
-    public function store(Request $request)
+    public function store(DurationRequest $request)
     {
         $duration = $this->durationService->createDuration($request);
         return response()->json($duration);

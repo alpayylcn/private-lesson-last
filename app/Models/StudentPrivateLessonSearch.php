@@ -48,4 +48,8 @@ class StudentPrivateLessonSearch extends Model
     {
         return $this->hasOne(Lesson::class,'id','step_option_id');
     } 
+    public function student()
+    {
+        return $this->belongsTo(User::class, 'student_id', 'id');
+    }
 }

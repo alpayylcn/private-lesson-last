@@ -183,6 +183,8 @@
                 <form id="topUpForm">
                     @csrf
                     <div class="row">
+                        <div id="error-message" class="alert alert-danger" style="display: none;"></div>
+
                         <div class="col-md-6 mb-3">
                             <div class="card amount-card" data-value="250">
                                 <div class="card-body text-center">
@@ -258,34 +260,39 @@
 //Para yükleme Scripti
 $(document).ready(function() {
     $('.amount-card').click(function() {
+        // Tüm kartlardan 'active' sınıfını kaldır
         $('.amount-card').removeClass('active');
+        
+        // Seçili karta 'active' sınıfını ekle
         $(this).addClass('active');
-        $('#customAmount').val(''); // Özel miktar alanını temizle
-    });
-
-    $('#customAmount').on('input', function() {
-        $('.amount-card').removeClass('active'); // Radyo butonlarını devre dışı bırak
+        
+        // Seçilen miktarı input alanına yaz
+        var selectedAmount = $(this).data('value');
+        $('#customAmount').val(selectedAmount); // Miktar input alanına yazılır
+        
+        // Seçilen miktar dışında başka bir şey girildiğinde alan temizlensin
+        $('#customAmount').on('input', function() {
+            $('.amount-card').removeClass('active');
+        });
     });
 
     $('#topUpForm').submit(function(e) {
         e.preventDefault();
 
-        var selectedAmount = $('.amount-card.active').data('value');
-        var customAmount = $('#customAmount').val();
+        // Input alanındaki değeri al
+        var amount = $('#customAmount').val();
 
-        var amount = customAmount ? customAmount : selectedAmount;
-
-        if (!amount) {
-            alert('Lütfen bir miktar seçin veya girin.');
-            return;
-        }
+            if(!amount){
+                toastr.warning('Lütfen bir miktar seçin veya girin.');
+                return;
+            }
 
         $.ajax({
             url: '{{route("add.money.store")}}', // Backend route
             method: 'POST',
             data: {
                 _token: $('meta[name="csrf-token"]').attr('content'),
-                amount: amount
+                amount: amount // Sadece inputtaki veri gönderiliyor
             },
             success: function(response) {
                 toastr.success('Yükleme başarılı! Güncel bakiye: ' + response.balance + ' TL');
@@ -293,11 +300,19 @@ $(document).ready(function() {
                 location.reload(); // Sayfayı yeniden yükle
             },
             error: function(xhr) {
-                console.log(xhr.responseText);
-                toastr.error(response.message); // Hata mesajını gösterin
+                // Hata mesajlarını modalda gösterin
+                let errors = xhr.responseJSON.errors;
+                let errorMessage = '';
+
+                $.each(errors, function(key, value) {
+                    errorMessage += value + '<br>';
+                });
+
+                $('#error-message').html(errorMessage).show(); // Hata mesajlarını göster
             }
         });
     });
 });
+
 </script>
 @endsection
