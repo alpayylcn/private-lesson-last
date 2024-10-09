@@ -38,6 +38,7 @@ class FilterStudentSearchTeacherController extends Controller
         } elseif (!empty($stepNumber) && $stepNumber->rank != 1) {
             $stepOption = $this->stepOptionTitleService->getWithWhere(['question_id' => $stepNumber->id]);
         }
+        //dd($stepOption);
         //blade de karışıklık olmasın diye burada değişkenleri bir diziye aktarıyoruz 
         $filterStepData = ['stepOption'=>$stepOption,'stepNumber'=> $stepNumber];
          

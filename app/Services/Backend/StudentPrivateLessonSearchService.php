@@ -90,6 +90,15 @@ class StudentPrivateLessonSearchService{
     public function updateOrCreateLessonSearch(array $data){
         if (auth()->user()){
             $user_id=auth()->user()->id;
+            $details = auth()->user()->userDetails;
+            if ($details) {
+                $user_city = $details->city;
+                $user_county=$details->county;
+            } else {
+                // Detay bulunamadı,
+                $user_city=0;
+                $user_county=0;
+            }
             $statu_type=1;//veritabanına öğrencini kayıtlı olduğu bilgisi yazılacak "statu_type alanına"
         }else{
             $user_id=0;
@@ -103,7 +112,13 @@ class StudentPrivateLessonSearchService{
           
             $updateOrCreate = StudentPrivateLessonSearch::updateOrCreate(
                     ['session_id'=>$sessionId, 'step_question_id'=>$data['question_id']],
-                    ['student_ip'=>$clientIpAddress,'step_option_id'=>$data['option_value'],'student_id'=>$user_id,'statu_type'=>$statu_type]
+                    [   'student_ip'=>$clientIpAddress,
+                                'step_option_id'=>$data['option_value'],
+                                'student_id'=>$user_id,
+                                'statu_type'=>$statu_type,
+                                'student_city_id'=>$user_city,
+                                'student_country_town_id'=>$user_county,
+                                ]
                 );
                 return $updateOrCreate;
             }

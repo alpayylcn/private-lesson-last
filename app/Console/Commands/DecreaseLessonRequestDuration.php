@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 
 class DecreaseLessonRequestDuration extends Command
 {
+    // öğretmen beni arasın seçeneğinden gelen ilanları silinmesi
     protected $signature = 'requests:decrease-duration';
     protected $description = 'Decrease request duration by 1 day and remove expired requests';
 

@@ -21,7 +21,8 @@ class FilterLessonLocationService{
         }
 
         public function delete(int $id){
-            $first=$this->first(['id',$id]);
+            
+            $first=$this->first(['id'=>$id]);
             return $first->delete();
                 
         }
@@ -42,7 +43,7 @@ class FilterLessonLocationService{
             return $query->orderByDesc('id')->get();
          }
          public function first(array $where)
-       {
+       {   
              // Veritabanı sorgusu oluştur
              $query = $this->filterLessonLocation->query();
    

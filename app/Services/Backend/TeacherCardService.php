@@ -4,6 +4,7 @@
 namespace App\Services\Backend;
 
 use App\Jobs\DeactivateAdvertisement;
+use App\Models\Backend\StepOptionTitle;
 use App\Models\Backend\TeacherAdvertisement;
 use App\Models\StudentPrivateLessonSearch;
 use App\Models\User;
@@ -81,37 +82,46 @@ class TeacherCardService
     public function searchTeachersByStudentCriteria($studentId)
     {
         // Öğrencinin arama kriterlerini al
-        $searchCriteria = StudentPrivateLessonSearch::where('student_id', $studentId)->get();
+    $searchCriteria = StudentPrivateLessonSearch::where('student_id', $studentId)->get();
 
-        // Filtrelemeyi ders, sınıf ve nerede olacağına göre yapacağız
-        $lessonId = $searchCriteria->where('step_question_id', 1)->first()->step_option_id;
-        $classId = $searchCriteria->where('step_question_id', 2)->first()->step_option_id;
-        $locationId = $searchCriteria->where('step_question_id', 3)->first()->step_option_id; // 1: Online, 2: Ofis
-        //dd($lessonId,$classId,$locationId);
-        // Sorguyu öğretmenlere göre başlat
-        $query = User::query()
-            ->whereHas('teacherToLessonAndClasses', function ($q) use ($lessonId, $classId) {
-                $q->where('lesson_id', $lessonId)
-                  ->where('class_id', $classId);
-            })
-            ->whereHas('teacherToLocations', function ($q) use ($locationId) {
-                $q->where('location_id', $locationId); // Dersi nerede verdiğini kontrol ediyoruz
-            });
+    // Filtrelemeyi ders, sınıf ve nerede olacağına göre yapacağız
+    $lessonId = $searchCriteria->where('step_question_id', 1)->first()->step_option_id;
+    $classId = $searchCriteria->where('step_question_id', 2)->first()->step_option_id;
+    $locationIdRef = $searchCriteria->where('step_question_id', 3)->first()->step_option_id; // 1: Online, 2: Ofis
 
-        // Eğer öğrenci "online" şeçmediyse il ve ilçe bilgilerini de filtrelemeye ekle
-        if ($locationId != 1) { //Online değilse 
-            $studentCityId = $searchCriteria->first()->student_city_id;
-            $studentCountryTownId = $searchCriteria->first()->student_country_town_id;
+    // Referans id'ye göre step option title tablosundan option id değerini çekiyoruz. Öğretmenler buna göre filtrelenecek
+    $location = StepOptionTitle::where('id', $locationIdRef)->first();
+    $locationId = $location->option_id;
+    $locationTitle = $location->title;
+   
+    // Sorguyu öğretmenlere göre başlat
+    $query = User::query()
+        ->whereHas('teacherToLessonAndClasses', function ($q) use ($lessonId, $classId) {
+            $q->where('lesson_id', $lessonId)
+              ->where('class_id', $classId);
+        })
+        ->whereHas('teacherToLocations', function ($q) use ($locationId) {
+            $q->where('location_id', $locationId); // Dersi nerede verdiğini kontrol ediyoruz
+        })
+        // Öğretmenin aktif bir ilanı olup olmadığını kontrol ediyoruz
+        ->whereHas('advertisements', function ($q) {
+            $q->where('end_date', '>', now()); // Bitiş tarihi bugünden sonra olan ilanları kontrol ediyoruz
+        });
 
-            // İlgili il ve ilçe bilgileri öğretmenin UserDetails tablosunda kontrol edilecek
-            $query->whereHas('userDetails', function ($q) use ($studentCityId, $studentCountryTownId) {
-                $q->where('city', $studentCityId)
-                  ->where('county', $studentCountryTownId);
-            });
-        }
+    // Eğer öğrenci "online" seçmediyse il ve ilçe bilgilerini de filtrelemeye ekle
+    if ($locationTitle != 'Online') { // Online değilse
+        $studentCityId = $searchCriteria->first()->student_city_id;
+        $studentCountryTownId = $searchCriteria->first()->student_country_town_id;
 
-        // Sonuçları getir random sırala
-        return $query->inRandomOrder()->get();
+        // İlgili il ve ilçe bilgileri öğretmenin UserDetails tablosunda kontrol edilecek
+        $query->whereHas('userDetails', function ($q) use ($studentCityId, $studentCountryTownId) {
+            $q->where('city', $studentCityId)
+              ->where('county', $studentCountryTownId);
+        });
+    }
+
+    // Sonuçları getir random sırala
+    return $query->inRandomOrder()->get();
     }
 
 

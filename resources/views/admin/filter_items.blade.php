@@ -58,16 +58,16 @@
               @forelse ($data as $question )
                 <tr id="{{$question->id}}"> 
                 <td class="col-10"><input type="text" 
-                  @if ($question->rank==1 || $question->rank==2 || $question->rank==$stepCount->count())
+                  @if ($question->rank==1 || $question->rank==2 || $question->rank==3 || $question->rank==$stepCount->count())
                     disabled 
                   @endif
                     name="title[{{$question->id}}]" class="form-control" value="{{$question->title}}" placeholder=""></td>
                 <td><input type="text"
-                  @if ($question->rank==1 || $question->rank==2 )
+                  @if ($question->rank==1 || $question->rank==2 || $question->rank==3 )
                     disabled 
                   @endif
                     name="rank[{{$question->id}}]" class="form-control" value="{{$question->rank}}" placeholder=""></td>
-                  @if ($question->rank==1 || $question->rank==2)
+                  @if ($question->rank==1 || $question->rank==2 || $question->rank==3 )
                     <td></td>
                   @else
                     <td><button id="{{$question->id}}" type="button" class="btnstepforcedelete form-control btn-danger"><i class="bx bx-trash  me-2"></button></td> 

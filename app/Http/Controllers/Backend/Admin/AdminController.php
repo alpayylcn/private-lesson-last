@@ -109,6 +109,7 @@ class AdminController extends Controller
     }
     public function filterItemsUpdate(StepQuestionRequest $request)
     {
+        
         $userId=auth()->user()->id;
         foreach ($request->rank as $id => $rank) 
         {
@@ -121,6 +122,7 @@ class AdminController extends Controller
             
         }
         $data=$this->stepQuestionService->getWithWhere();
+        
         toastr()->success('Güncelleme İşlemi Başarılı', 'Başarılı', ["positionClass" => "toast-top-right"]);
         return back();
         

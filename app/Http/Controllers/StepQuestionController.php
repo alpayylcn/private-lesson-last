@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdateStepOptionTitleRequest;
 use App\Models\Backend\StepOptionTitle;
 use App\Models\Backend\StepQuestion;
+use App\Services\Backend\FilterLessonLocationService;
+use App\Services\Backend\StepOptionTitleService;
 use App\Services\Backend\StepQuestionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +15,8 @@ class StepQuestionController extends Controller
 { public function __construct(
    
     protected StepQuestionService $stepQuestionService, 
+    protected FilterLessonLocationService $filterLessonLocationService,
+    protected StepOptionTitleService $stepOptionTitleService
     
     ){}
     public function index()
@@ -24,25 +28,57 @@ class StepQuestionController extends Controller
 
     public function filterOptionsAdd(UpdateStepOptionTitleRequest $request)
     {   
-        $optionAdd=StepOptionTitle::create($request->except('_token','user_id'));
-            $optionAdd->update(['option_id'=>$optionAdd->id]); //tabloya create işlemi yapılınca option_id sütununa id bilgisini ekliyoruz
-        if(!empty($optionAdd)){
+        $requestData = $request->except('_token');
+        $optionData = $request->except('_token', 'user_id');
+    
+        // Eğer gelen bilgi 3. soruya aitse (ders nerede yapılacak?) önce lokasyon tablosuna ekleme yapıyoruz
+        if($request->question_id == 3)  {
+            // `user_id`'yi `add_user_id` olarak ayarlıyoruz
+            $requestData['add_user_id'] = $request->user_id;
+            
+            // Lokasyon tablosuna kaydı ekliyoruz
+            $locationAdd = $this->filterLessonLocationService->create($requestData);
+            
+            // Eğer lokasyon eklenmişse, lokasyonun ID'sini alıp `optionData`'ya ekliyoruz
+            if ($locationAdd) {
+                $optionData['option_id'] = $locationAdd->id;
+            }
+        }  
+    
+        // Opsiyonları `step_option_title` tablosuna ekliyoruz
+        $optionAdd = $this->stepOptionTitleService->create($optionData);
+        
+        // Eğer `option_id` eklenmediyse, kaydedilen opsiyonun kendi ID'sini kullanarak `option_id`'yi güncelliyoruz
+        if ($request->question_id != 3) {
+            $option_id = $optionAdd->id;
+            $optionAdd->update(['option_id' => $option_id]);
+        }
+        
+        // İşlem başarılı olursa geri bildirim veriyoruz
+        if (!empty($optionAdd)) {
             toastr()->success('Ekleme İşlemi Başarılı', 'Başarılı', ["positionClass" => "toast-top-right"]);
             return response()->json($optionAdd, 201);
-        }  
+        }
     }
 
     public function filterOptionsDelete(Request $request)
     {   
-        if(!empty($request->id))
+        if(!empty($request->id) )
         {
-            $data=StepOptionTitle::find($request->id);
-            $data->delete();
-                if (!empty ($data)){
-                    return redirect()->back();
-                }
+            if($request->questionId==3){//Eğer 3 soruya ait silme işlemi varsa lokasyon tablosundan da silinecek
+                $locationId=$this->stepOptionTitleService->getWithWhere(['id'=>$request->id,'question_id'=>3])->first()->option_id;
+                $deleteLocation=$this->filterLessonLocationService->delete($locationId);
+           }
+            if($deleteLocation){
+                $data=$this->stepOptionTitleService->delete($request->id);
+            }
+            
+           
+            
         }
-       
+        if (!empty ($data)){
+                 return redirect()->back();
+        }
         
     }
     public function getStepOptionTitles($id)
@@ -58,7 +94,7 @@ class StepQuestionController extends Controller
 
     public function filterOptionsUpdate(Request $request)
     { 
-      // dd($request);
+      //dd($request);
             foreach($request->option_title as $key => $title)
                 {
                    $updateOption=StepOptionTitle::where('id', $key)->update([

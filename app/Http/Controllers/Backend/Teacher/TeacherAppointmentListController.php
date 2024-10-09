@@ -50,14 +50,24 @@ class TeacherAppointmentListController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {   dd($request);
+    {   
         $this->validate($request, [
             'lesson_id' => 'required|exists:lessons,id',
             'class' => 'required|string|max:255',
             'note' => 'nullable|string|max:1000',
             'teacher_id' => 'required|exists:users,id',
         ]);
+            $student_id=Auth::user()->id;
+        // Aynı gün içerisinde aynı öğrenci aynı öğretmene talep göndermiş mi kontrol et
+            $existingRequest = TeacherAppointmentList::where('student_id', $student_id)
+            ->where('teacher_id', $request->teacher_id)
+            ->whereDate('created_at', now()->format('Y-m-d')) // Aynı gün
+            ->whereNull('deleted_at') // Soft delete edilmemiş
+            ->first();
 
+            if ($existingRequest) {
+                return response('Bu öğretmene gün içerisinde zaten talep gönderdiniz. Lütfen başka bir zaman deneyin.', 400);
+            }
         $data = $request->all();
         
         $this->teacherAppointmentListService->storeLessonRequest($data);

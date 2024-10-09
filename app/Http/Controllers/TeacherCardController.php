@@ -38,7 +38,7 @@ class TeacherCardController extends Controller
         $teachers = $this->teacherCardService->searchTeachersByStudentCriteria($studentId);
         $lesson_id= $this->studentPrivateLessonSearchService->studentChooseLesson($studentId);
         $class_id= $this->studentPrivateLessonSearchService->studentChooseClass($studentId);
-
+//dd($teachers,$lesson_id,$class_id);
         return view('filter_lesson.filter_teacher_list', compact('teachers','lesson_id','class_id'));
     }
 }

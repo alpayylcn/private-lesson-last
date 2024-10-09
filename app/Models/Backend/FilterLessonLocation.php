@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FilterLessonLocation extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory;
     public $timestamps = true;
     protected $table = 'filter_lesson_locations';
     protected $casts = [

@@ -146,7 +146,7 @@ $(document).ready(function() {
                 location.reload();
             },
             error: function(xhr) {
-                toastr.error('Bir hata oluştu. Lütfen tekrar deneyin.'+xhr.responseText);
+                toastr.error('Bir hata oluştu.'+xhr.responseText);
             }
         });
     });

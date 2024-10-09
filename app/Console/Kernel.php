@@ -16,6 +16,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('requests:decrease-duration')->daily();
         // Her gün saat 00:00'da komutu çalıştır
         $schedule->command('check:advertisements')->daily();
+        // Randevuları günlük kontrol et
+        $schedule->command('appointments:delete-expired')->daily(); 
     }
 
     /**

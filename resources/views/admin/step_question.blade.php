@@ -183,6 +183,7 @@
  
                         $('.btnoptionforcedelete').click(function() {
                             var id = $(this).attr('id');
+                            var questionId = $(this).closest('tr').find('input[name="question_id"]').val();
                             Swal.fire({
                                     title: 'Tamamen Silmek Üzeresin',
                                     text: "Bu İşlem Geri Alınamaz",
@@ -197,7 +198,7 @@
                                     $.ajax({
                                             type: "post",
                                             url: "{{route('admin.filterOptionsDelete')}}",
-                                            data:{_token:"{{ csrf_token() }}",id:id},
+                                            data:{_token:"{{ csrf_token() }}",id:id,questionId:questionId},
                                             success: function(msg) {
                                             if (msg) {
                                             Swal.fire(
